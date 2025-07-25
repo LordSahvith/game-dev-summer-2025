@@ -5,12 +5,12 @@ using namespace std;
 
 int main()
 {
-    string name = "Lord Savith";
-    string message = "Hello " + name;
-    int age = 666;
-
     char character1 = 'A'; // characters require a single quote
     char character2 = 'a';
+
+    int age = 666;
+    string name = "Lord Savith";
+    string message = "Hello " + name;
 
     bool isLightOn = true; // booleans are either 0 or 1 - false (0) or true (1)
 
@@ -18,9 +18,10 @@ int main()
     double doubleVar = 12.345678901234567;
     long double longDouble = 12.345678901234567890;
 
-    cout << message << " " << age << endl;
     cout << character1 << endl;
     cout << character2 << endl;
+    cout << age << endl;
+    cout << message << " " << age << endl;
     cout << "is light on? " << isLightOn << endl;
     cout << "float: " << setprecision(8) << floatVar << endl;     // precise
     cout << "float: " << setprecision(10) << floatVar << endl;    // loses precision on floats
