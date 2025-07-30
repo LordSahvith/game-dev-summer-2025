@@ -26,4 +26,15 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    UE_LOG(LogTemp, Warning, TEXT("DeltaTime: %f"), DeltaTime);
+
+    if (GEngine)
+    {
+        FString name = GetName();
+        FString message = FString::Printf(TEXT("Item Name: %s"), *name);
+        GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, message);
+
+        UE_LOG(LogTemp, Warning, TEXT("Item Name: %s"), *name);
+    }
 }
