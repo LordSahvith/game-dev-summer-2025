@@ -15,13 +15,12 @@ void AItem::BeginPlay()
 {
     Super::BeginPlay();
 
-    UWorld* World = GetWorld();
     FVector Location = GetActorLocation();
     FVector Forward = GetActorForwardVector();
-    FVector Length = Location + Forward * 100.f;
+    FVector EndPoint = Location + Forward * 100.f;
 
     DRAW_SPHERE(Location);
-    DRAW_LINE(Location, Length);
+    DRAW_VECTOR(Location, EndPoint);
 }
 
 // Called every frame
