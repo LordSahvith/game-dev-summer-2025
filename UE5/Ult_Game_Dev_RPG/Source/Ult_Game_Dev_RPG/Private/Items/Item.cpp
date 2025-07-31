@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Items/Item.h"
+#include "DrawDebugHelpers.h"
+#include "Ult_Game_Dev_RPG/Ult_Game_Dev_RPG.h"
 
-// Sets default values
 AItem::AItem()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -20,6 +21,14 @@ void AItem::BeginPlay()
     {
         GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, FString("BeginPlay (Item)"));
     }
+
+    UWorld* World = GetWorld();
+
+    if (World)
+    {
+        FVector Location = GetActorLocation();
+        DRAW_SPHERE(Location);
+    }
 }
 
 // Called every frame
@@ -31,10 +40,10 @@ void AItem::Tick(float DeltaTime)
 
     if (GEngine)
     {
-        FString name = GetName();
-        FString message = FString::Printf(TEXT("Item Name: %s"), *name);
-        GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, message);
+        FString Name = GetName();
+        FString Message = FString::Printf(TEXT("Item Name: %s"), *Name);
+        GEngine->AddOnScreenDebugMessage(1, 60.f, FColor::Cyan, Message);
 
-        UE_LOG(LogTemp, Warning, TEXT("Item Name: %s"), *name);
+        UE_LOG(LogTemp, Warning, TEXT("Item Name: %s"), *Name);
     }
 }
