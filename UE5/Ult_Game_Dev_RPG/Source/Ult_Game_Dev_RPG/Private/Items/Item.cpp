@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Items/Item.h"
-#include "DrawDebugHelpers.h"
-#include "Ult_Game_Dev_RPG/Ult_Game_Dev_RPG.h"
+#include "Ult_Game_Dev_RPG/DebugMacros.h"
 
 AItem::AItem()
 {
@@ -15,6 +14,7 @@ void AItem::BeginPlay()
 {
     Super::BeginPlay();
 
+    SetActorLocation(FVector(0.f, 0.f, 50.f));
     FVector Location = GetActorLocation();
     FVector Forward = GetActorForwardVector();
     FVector EndPoint = Location + Forward * 100.f;
