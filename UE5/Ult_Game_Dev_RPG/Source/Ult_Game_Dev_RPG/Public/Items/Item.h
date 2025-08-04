@@ -17,4 +17,9 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
 
   protected:
     virtual void BeginPlay() override;
+
+  private:
+    float RunningTime = 0.f;
+    float Amplitude = 0.25f;
+    float TimeConstant = 5.f;
 };

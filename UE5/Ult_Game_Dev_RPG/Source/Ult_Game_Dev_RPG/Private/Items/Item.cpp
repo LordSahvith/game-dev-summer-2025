@@ -20,12 +20,12 @@ void AItem::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    // rate (cm/s) * Deltatime (s/frame) = fixed rate per frame (cm/frame)
-    float MovementRate = 50.f * DeltaTime;
-    float RotationRate = 45.f * DeltaTime;
+    RunningTime += DeltaTime;
 
-    AddActorWorldOffset(FVector(MovementRate, 0.f, 0.f));
-    AddActorWorldRotation(FRotator(0.f, RotationRate, 0.f));
+    float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
+
+    AddActorWorldOffset(FVector(0.f, 0.f, DeltaZ));
+
     DRAW_SPHERE_Singleframe(GetActorLocation());
     DRAW_VECTOR_Singleframe(GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 100.f);
 }
