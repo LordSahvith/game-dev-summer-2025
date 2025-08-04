@@ -20,6 +20,10 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
 
   private:
     float RunningTime = 0.f;
+
+    UPROPERTY(EditAnywhere)
     float Amplitude = 0.25f;
+
+    UPROPERTY(EditAnywhere)
     float TimeConstant = 5.f;
 };
