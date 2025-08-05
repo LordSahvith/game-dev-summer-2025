@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/CapsuleComponent.h"
 #include "Bird.generated.h"
 
 UCLASS()
@@ -24,4 +25,8 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
   protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+  private:
+    UPROPERTY(VisibleAnywhere)
+    UCapsuleComponent* Capsule;
 };

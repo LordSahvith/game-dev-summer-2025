@@ -7,6 +7,11 @@ ABird::ABird()
 {
     // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
+
+    Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+    Capsule->SetCapsuleHalfHeight(20.f);
+    Capsule->SetCapsuleRadius(20.f);
+    SetRootComponent(Capsule);
 }
 
 // Called when the game starts or when spawned

@@ -9,7 +9,7 @@ AItem::AItem()
     PrimaryActorTick.bCanEverTick = true;
 
     ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
-    RootComponent = ItemMesh;
+    SetRootComponent(ItemMesh);
 }
 
 // Called when the game starts or when spawned
