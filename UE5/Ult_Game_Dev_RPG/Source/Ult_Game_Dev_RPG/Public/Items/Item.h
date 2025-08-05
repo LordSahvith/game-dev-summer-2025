@@ -35,6 +35,9 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     float RunningTime = 0.f;
+
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* ItemMesh;
 };
 
 template <typename T> inline T AItem::Avg(T First, T Second)
