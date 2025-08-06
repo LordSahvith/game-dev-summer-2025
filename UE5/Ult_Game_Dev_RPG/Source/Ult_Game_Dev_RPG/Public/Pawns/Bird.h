@@ -12,6 +12,8 @@ class UCapsuleComponent;
 class USkeletalMeshComponent;
 class UInputMappingContext;
 class UInputAction;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API ABird : public APawn
@@ -46,4 +48,10 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
 
     UPROPERTY(VisibleAnywhere)
     USkeletalMeshComponent* BirdMesh;
+
+    UPROPERTY(VisibleAnywhere)
+    USpringArmComponent* SpringArm;
+
+    UPROPERTY(VisibleAnywhere)
+    UCameraComponent* ViewCamera;
 };
