@@ -4,10 +4,24 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
+
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationYaw = false;
+    bUseControllerRotationRoll = false;
+
+    SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+    SpringArm->SetupAttachment(GetRootComponent());
+    SpringArm->TargetArmLength = 300.f;
+    SpringArm->bUsePawnControlRotation = true;
+
+    ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
+    ViewCamera->SetupAttachment(SpringArm);
 }
 
 void AMainCharacter::BeginPlay()

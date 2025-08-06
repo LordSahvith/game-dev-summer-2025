@@ -10,6 +10,8 @@
 class UInputComponent;
 class UInputMappingContext;
 class UInputAction;
+class USpringArmComponent;
+class UCameraComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
@@ -35,4 +37,11 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
+
+  private:
+    UPROPERTY(VisibleAnywhere)
+    USpringArmComponent* SpringArm;
+
+    UPROPERTY(VisibleAnywhere)
+    UCameraComponent* ViewCamera;
 };
