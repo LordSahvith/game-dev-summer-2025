@@ -35,4 +35,6 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
 
     UPROPERTY(VisibleAnywhere)
     USkeletalMeshComponent* BirdMesh;
+
+    void MoveForward(float Value);
 };
