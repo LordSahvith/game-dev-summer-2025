@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "InputActionValue.h"
 #include "MainCharacter.generated.h"
+
+class UInputComponent;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
@@ -12,16 +17,22 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     GENERATED_BODY()
 
   public:
-    // Sets default values for this character's properties
     AMainCharacter();
-
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
-
-    // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
   protected:
-    // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* CharacterMappingContext;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* MoveAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* LookAction;
+
+    void Move(const FInputActionValue& Value);
+    void Look(const FInputActionValue& Value);
 };
