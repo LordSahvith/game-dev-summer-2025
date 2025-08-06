@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "Bird.generated.h"
 
 class UInputComponent;
 class UCapsuleComponent;
 class USkeletalMeshComponent;
+class UInputMappingContext;
+class UInputAction;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API ABird : public APawn
@@ -29,12 +32,18 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputMappingContext* BirdMappingContext;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* MoveAction;
+
+    void Move(const FInputActionValue& Value);
+
   private:
     UPROPERTY(VisibleAnywhere)
     UCapsuleComponent* Capsule;
 
     UPROPERTY(VisibleAnywhere)
     USkeletalMeshComponent* BirdMesh;
-
-    void MoveForward(float Value);
 };
