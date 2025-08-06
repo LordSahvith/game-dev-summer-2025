@@ -6,6 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "Bird.generated.h"
 
+class UInputComponent;
+class UCapsuleComponent;
+class USkeletalMeshComponent;
+
 UCLASS()
 class ULT_GAME_DEV_RPG_API ABird : public APawn
 {
@@ -19,7 +23,7 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
     virtual void Tick(float DeltaTime) override;
 
     // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
   protected:
     // Called when the game starts or when spawned
@@ -27,5 +31,8 @@ class ULT_GAME_DEV_RPG_API ABird : public APawn
 
   private:
     UPROPERTY(VisibleAnywhere)
-    class UCapsuleComponent* Capsule;
+    UCapsuleComponent* Capsule;
+
+    UPROPERTY(VisibleAnywhere)
+    USkeletalMeshComponent* BirdMesh;
 };
