@@ -23,6 +23,7 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     AMainCharacter();
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+    // virtual void Jump() override;
 
   protected:
     virtual void BeginPlay() override;
@@ -35,6 +36,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* LookAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* JumpAction;
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);

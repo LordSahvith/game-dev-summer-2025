@@ -19,8 +19,9 @@ void UEchoAnimInstance::NativeUpdateAnimation(float DeltaTime)
 {
     Super::NativeUpdateAnimation(DeltaTime);
 
-    if (MainCharacter)
+    if (CharacterMovement)
     {
         GroundSpeed = UKismetMathLibrary::VSizeXY(CharacterMovement->Velocity);
+        IsFalling = CharacterMovement->IsFalling();
     }
 }

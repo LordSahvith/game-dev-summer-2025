@@ -24,4 +24,7 @@ class ULT_GAME_DEV_RPG_API UEchoAnimInstance : public UAnimInstance
 
     UPROPERTY(BlueprintReadOnly, Category = Movement)
     float GroundSpeed;
+
+    UPROPERTY(BlueprintReadOnly, Category = Movement)
+    bool IsFalling;
 };
