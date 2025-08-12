@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Items/Item.h"
-#include "Ult_Game_Dev_RPG/DebugMacros.h"
+#include "Components/SphereComponent.h"
 
 AItem::AItem()
 {
@@ -10,12 +10,17 @@ AItem::AItem()
 
     ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
     SetRootComponent(ItemMesh);
+
+    Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+    Sphere->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
     Super::BeginPlay();
+
+    Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 }
 
 float AItem::TransformedSin()
@@ -26,6 +31,18 @@ float AItem::TransformedSin()
 float AItem::TransformedCos()
 {
     return Amplitude * FMath::Cos(RunningTime * TimeConstant);
+}
+
+void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                            const FHitResult& SweepResult)
+{
+    const FString OtherActorName = OtherActor->GetName();
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+    }
 }
 
 // Called every frame

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class ULT_GAME_DEV_RPG_API AItem : public AActor
 {
@@ -30,7 +32,9 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
     UFUNCTION(BlueprintPure)
     float TransformedCos();
 
-    template <typename T> T Avg(T First, T Second);
+    UFUNCTION()
+    void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -38,9 +42,7 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
 
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* ItemMesh;
-};
 
-template <typename T> inline T AItem::Avg(T First, T Second)
-{
-    return (First + Second) / 2;
-}
+    UPROPERTY(VisibleAnywhere)
+    USphereComponent* Sphere;
+};
