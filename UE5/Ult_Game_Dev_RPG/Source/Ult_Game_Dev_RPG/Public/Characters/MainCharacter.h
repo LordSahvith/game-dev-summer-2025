@@ -13,6 +13,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
@@ -28,24 +29,37 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
   protected:
     virtual void BeginPlay() override;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    /**
+     * Input Actions
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* CharacterMappingContext;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* MoveAction;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* LookAction;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* JumpAction;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* EquipAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* AttackAction;
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
     void Equip(const FInputActionValue& Value);
+    void Attack(const FInputActionValue& Value);
+
+    /**
+     * Animation Montages
+     */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
+    UAnimMontage* OneHandedAttackMontage;
 
   private:
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;

@@ -8,6 +8,7 @@
 #include "GroomComponent.h"
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
+#include "Animation/AnimMontage.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -90,6 +91,27 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     }
 }
 
+void AMainCharacter::Attack(const FInputActionValue& Value)
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+    // One-Handed Attacks
+    if (AnimInstance && OneHandedAttackMontage && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon)
+    {
+        AnimInstance->Montage_Play(OneHandedAttackMontage);
+        int32 Selection = FMath::RandRange(1, 3);
+        FString AttackType = "Attack";
+        AttackType.AppendInt(Selection);
+
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, AttackType);
+        }
+
+        AnimInstance->Montage_JumpToSection(FName(AttackType), OneHandedAttackMontage);
+    }
+}
+
 void AMainCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -105,5 +127,6 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
+        EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AMainCharacter::Attack);
     }
 }
