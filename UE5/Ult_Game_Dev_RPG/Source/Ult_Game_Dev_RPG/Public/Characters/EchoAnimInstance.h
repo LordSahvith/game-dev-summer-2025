@@ -20,14 +20,15 @@ class ULT_GAME_DEV_RPG_API UEchoAnimInstance : public UAnimInstance
     UPROPERTY(BlueprintReadOnly)
     AMainCharacter* MainCharacter;
 
-    UPROPERTY(BlueprintReadOnly, Category = Movement)
+    UPROPERTY(BlueprintReadOnly, Category = "Movement")
     UCharacterMovementComponent* CharacterMovement;
 
-    UPROPERTY(BlueprintReadOnly, Category = Movement)
+    UPROPERTY(BlueprintReadOnly, Category = "Movement")
     float GroundSpeed;
 
-    UPROPERTY(BlueprintReadOnly, Category = Movement)
+    UPROPERTY(BlueprintReadOnly, Category = "Movement")
     bool IsFalling;
 
+    UPROPERTY(BlueprintReadOnly, Category = "Movement | Character State")
     ECharacterState CharacterState;
 };

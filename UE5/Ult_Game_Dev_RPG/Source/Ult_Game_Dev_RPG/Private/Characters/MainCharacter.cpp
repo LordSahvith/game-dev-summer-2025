@@ -18,7 +18,7 @@ AMainCharacter::AMainCharacter()
     bUseControllerRotationRoll = false;
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
-    GetCharacterMovement()->RotationRate = FRotator(0.f, 360.f, 0.f);
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
 
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
     SpringArm->SetupAttachment(GetRootComponent());
