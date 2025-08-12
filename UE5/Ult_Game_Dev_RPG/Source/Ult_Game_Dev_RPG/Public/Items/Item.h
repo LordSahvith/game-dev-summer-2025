@@ -41,12 +41,12 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
     virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    UStaticMeshComponent* ItemMesh;
+
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     float RunningTime = 0.f;
-
-    UPROPERTY(VisibleAnywhere)
-    UStaticMeshComponent* ItemMesh;
 
     UPROPERTY(VisibleAnywhere)
     USphereComponent* Sphere;
