@@ -20,7 +20,9 @@ void AItem::BeginPlay()
 {
     Super::BeginPlay();
 
-    Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
+    // Bind Delegates
+    Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereBeginOverlap);
+    Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 }
 
 float AItem::TransformedSin()
@@ -33,15 +35,26 @@ float AItem::TransformedCos()
     return Amplitude * FMath::Cos(RunningTime * TimeConstant);
 }
 
-void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-                            const FHitResult& SweepResult)
+void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                 const FHitResult& SweepResult)
 {
-    const FString OtherActorName = OtherActor->GetName();
+    const FString Message = FString("Overlap with: ") + OtherActor->GetName();
 
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Cyan, Message);
+    }
+}
+
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    const FString Message = FString("Ending Overlap with: ") + OtherActor->GetName();
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Cyan, Message);
     }
 }
 
