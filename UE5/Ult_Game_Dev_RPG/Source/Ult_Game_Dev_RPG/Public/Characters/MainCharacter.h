@@ -13,6 +13,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
+class AItem;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
@@ -40,8 +41,12 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* JumpAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* EquipAction;
+
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
+    void Equip(const FInputActionValue& Value);
 
   private:
     UPROPERTY(VisibleAnywhere)
@@ -55,4 +60,13 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     UPROPERTY(VisibleAnywhere, Category = Hair)
     UGroomComponent* Eyebrows;
+
+    UPROPERTY(VisibleInstanceOnly)
+    AItem* OverlappingItem;
+
+  public:
+    FORCEINLINE void SetOverlappingItem(AItem* Item)
+    {
+        OverlappingItem = Item;
+    }
 };

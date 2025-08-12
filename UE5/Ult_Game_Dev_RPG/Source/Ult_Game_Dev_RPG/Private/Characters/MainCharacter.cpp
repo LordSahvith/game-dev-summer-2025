@@ -8,6 +8,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GroomComponent.h"
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -79,6 +81,16 @@ void AMainCharacter::Look(const FInputActionValue& Value)
     }
 }
 
+void AMainCharacter::Equip(const FInputActionValue& Value)
+{
+    AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+
+    if (OverlappingWeapon)
+    {
+        OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+    }
+}
+
 void AMainCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -93,5 +105,6 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
+        EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
     }
 }

@@ -2,6 +2,7 @@
 
 #include "Items/Item.h"
 #include "Components/SphereComponent.h"
+#include "Characters/MainCharacter.h"
 
 AItem::AItem()
 {
@@ -39,22 +40,22 @@ void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                  const FHitResult& SweepResult)
 {
-    const FString Message = FString("Overlap with: ") + OtherActor->GetName();
+    AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
 
-    if (GEngine)
+    if (MainCharacter)
     {
-        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Cyan, Message);
+        MainCharacter->SetOverlappingItem(this);
     }
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-    const FString Message = FString("Ending Overlap with: ") + OtherActor->GetName();
+    AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
 
-    if (GEngine)
+    if (MainCharacter)
     {
-        GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Cyan, Message);
+        MainCharacter->SetOverlappingItem(nullptr);
     }
 }
 
