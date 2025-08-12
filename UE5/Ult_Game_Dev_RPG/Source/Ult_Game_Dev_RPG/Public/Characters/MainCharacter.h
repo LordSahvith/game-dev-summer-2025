@@ -24,7 +24,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     AMainCharacter();
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-    // virtual void Jump() override;
 
   protected:
     virtual void BeginPlay() override;
@@ -52,12 +51,15 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
+    virtual void Jump() override;
     void Equip(const FInputActionValue& Value);
     void Attack(const FInputActionValue& Value);
 
     /**
      * Animation Montages
      */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
+    UAnimMontage* JumpMontage;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
     UAnimMontage* OneHandedAttackMontage;
 

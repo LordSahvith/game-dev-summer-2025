@@ -80,6 +80,38 @@ void AMainCharacter::Look(const FInputActionValue& Value)
     }
 }
 
+void AMainCharacter::Jump()
+{
+    Super::Jump();
+
+    // UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+    // // Which Type of Jump
+    // if (AnimInstance && JumpMontage && !GetCharacterMovement()->IsFalling())
+    // {
+    //     FString JumpType = "";
+
+    //     switch (CharacterState)
+    //     {
+    //         case ECharacterState::ECS_EquippedOneHandedWeapon:
+    //             JumpType = "EquippedOneHanded";
+    //             break;
+    //         case ECharacterState::ECS_EquippedTwoHandedWeapon:
+    //             JumpType = "EquippedTwoHanded";
+    //             break;
+    //         case ECharacterState::ECS_Unequipped:
+    //         default:
+    //             break;
+    //     }
+
+    //     FString JumpName = "Jump";
+    //     JumpName.Append(JumpType);
+
+    //     AnimInstance->Montage_Play(JumpMontage, 2.f);
+    //     AnimInstance->Montage_JumpToSection(FName(JumpName), JumpMontage);
+    // }
+}
+
 void AMainCharacter::Equip(const FInputActionValue& Value)
 {
     AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
@@ -98,17 +130,12 @@ void AMainCharacter::Attack(const FInputActionValue& Value)
     // One-Handed Attacks
     if (AnimInstance && OneHandedAttackMontage && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon)
     {
+        int32 AttackType = FMath::RandRange(1, 3);
+        FString AttackName = "Attack";
+        AttackName.AppendInt(AttackType);
+
         AnimInstance->Montage_Play(OneHandedAttackMontage);
-        int32 Selection = FMath::RandRange(1, 3);
-        FString AttackType = "Attack";
-        AttackType.AppendInt(Selection);
-
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, AttackType);
-        }
-
-        AnimInstance->Montage_JumpToSection(FName(AttackType), OneHandedAttackMontage);
+        AnimInstance->Montage_JumpToSection(FName(AttackName), OneHandedAttackMontage);
     }
 }
 

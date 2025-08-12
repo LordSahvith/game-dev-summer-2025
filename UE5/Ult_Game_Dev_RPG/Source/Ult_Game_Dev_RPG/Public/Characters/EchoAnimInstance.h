@@ -27,7 +27,7 @@ class ULT_GAME_DEV_RPG_API UEchoAnimInstance : public UAnimInstance
     float GroundSpeed;
 
     UPROPERTY(BlueprintReadOnly, Category = "Movement")
-    bool IsFalling;
+    bool bIsFalling;
 
     UPROPERTY(BlueprintReadOnly, Category = "Movement | Character State")
     ECharacterState CharacterState;
