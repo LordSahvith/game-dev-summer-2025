@@ -1,10 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterTypes.h"
 #include "MainCharacter.generated.h"
 
 class UInputComponent;
@@ -49,6 +48,8 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     void Equip(const FInputActionValue& Value);
 
   private:
+    ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
     UPROPERTY(VisibleAnywhere)
     USpringArmComponent* SpringArm;
 
@@ -68,5 +69,10 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     FORCEINLINE void SetOverlappingItem(AItem* Item)
     {
         OverlappingItem = Item;
+    }
+
+    FORCEINLINE ECharacterState GetCharacterState() const
+    {
+        return CharacterState;
     }
 };

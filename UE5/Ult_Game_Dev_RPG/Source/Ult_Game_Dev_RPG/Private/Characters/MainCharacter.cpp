@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Characters/MainCharacter.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -88,6 +86,7 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     if (OverlappingWeapon)
     {
         OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+        CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
     }
 }
 

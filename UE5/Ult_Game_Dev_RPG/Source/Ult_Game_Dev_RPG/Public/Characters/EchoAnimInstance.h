@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterTypes.h"
 #include "EchoAnimInstance.generated.h"
 
 class AMainCharacter;
@@ -27,4 +28,6 @@ class ULT_GAME_DEV_RPG_API UEchoAnimInstance : public UAnimInstance
 
     UPROPERTY(BlueprintReadOnly, Category = Movement)
     bool IsFalling;
+
+    ECharacterState CharacterState;
 };
