@@ -36,8 +36,11 @@ float AItem::TransformedCos()
     return Amplitude * FMath::Cos(RunningTime * TimeConstant);
 }
 
-void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                 AActor* OtherActor,
+                                 UPrimitiveComponent* OtherComp,
+                                 int32 OtherBodyIndex,
+                                 bool bFromSweep,
                                  const FHitResult& SweepResult)
 {
     AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
@@ -48,8 +51,10 @@ void AItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
     }
 }
 
-void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                               AActor* OtherActor,
+                               UPrimitiveComponent* OtherComp,
+                               int32 OtherBodyIndex)
 {
     AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
 

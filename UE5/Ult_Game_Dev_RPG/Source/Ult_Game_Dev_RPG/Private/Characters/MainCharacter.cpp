@@ -56,8 +56,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::Move(const FInputActionValue& Value)
 {
-    if (ActionState != EActionState::EAS_Unoccupied)
-        return;
+    if (ActionState != EActionState::EAS_Unoccupied) return;
 
     const FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -163,11 +162,6 @@ void AMainCharacter::AttackBasic(const FInputActionValue& Value)
     // calling: AMainCharacter::AttackEnd()
     if (CanAttack())
     {
-        if (GEngine)
-        {
-            FString Message = FString("Combo - 1");
-            GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Cyan, Message);
-        }
         Attack(BasicAttack);
     }
 }
@@ -186,11 +180,6 @@ void AMainCharacter::AttackCircle(const FInputActionValue& Value)
 
     if (CanAttack())
     {
-        if (GEngine)
-        {
-            FString Message = FString("Combo - 2");
-            GEngine->AddOnScreenDebugMessage(3, 2.f, FColor::Cyan, Message);
-        }
         Attack(CircleAttack);
     }
 }
@@ -200,11 +189,6 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
 
     if (CanAttack())
     {
-        if (GEngine)
-        {
-            FString Message = FString("Combo - 3");
-            GEngine->AddOnScreenDebugMessage(4, 2.f, FColor::Cyan, Message);
-        }
         Attack(HeavyAttack);
     }
 }
@@ -291,13 +275,13 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
-        EnhancedInputComponent->BindAction(AttackBasicAction, ETriggerEvent::Triggered, this,
-                                           &AMainCharacter::AttackBasic);
-        EnhancedInputComponent->BindAction(AttackThreePartComboAction, ETriggerEvent::Completed, this,
-                                           &AMainCharacter::AttackThreePartCombo);
-        EnhancedInputComponent->BindAction(AttackCircleAction, ETriggerEvent::Triggered, this,
-                                           &AMainCharacter::AttackCircle);
-        EnhancedInputComponent->BindAction(AttackHeavyAction, ETriggerEvent::Triggered, this,
-                                           &AMainCharacter::AttackHeavy);
+        EnhancedInputComponent->BindAction(
+            AttackBasicAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackBasic);
+        EnhancedInputComponent->BindAction(
+            AttackThreePartComboAction, ETriggerEvent::Completed, this, &AMainCharacter::AttackThreePartCombo);
+        EnhancedInputComponent->BindAction(
+            AttackCircleAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackCircle);
+        EnhancedInputComponent->BindAction(
+            AttackHeavyAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackHeavy);
     }
 }

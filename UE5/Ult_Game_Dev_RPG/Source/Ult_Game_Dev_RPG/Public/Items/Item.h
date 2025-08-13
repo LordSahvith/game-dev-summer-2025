@@ -39,13 +39,18 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
     float TransformedCos();
 
     UFUNCTION()
-    virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+    virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                      AActor* OtherActor,
+                                      UPrimitiveComponent* OtherComp,
+                                      int32 OtherBodyIndex,
+                                      bool bFromSweep,
                                       const FHitResult& SweepResult);
 
     UFUNCTION()
-    virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+    virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
+                                    AActor* OtherActor,
+                                    UPrimitiveComponent* OtherComp,
+                                    int32 OtherBodyIndex);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     UStaticMeshComponent* ItemMesh;
