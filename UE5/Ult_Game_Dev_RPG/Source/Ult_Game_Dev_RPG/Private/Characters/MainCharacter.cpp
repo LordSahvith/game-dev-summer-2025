@@ -1,14 +1,22 @@
+// character
 #include "Characters/MainCharacter.h"
+#include "Items/Item.h"
+#include "GroomComponent.h"
+#include "Animation/AnimMontage.h"
+
+// Input
 #include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+
+// Scenes
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "GroomComponent.h"
-#include "Items/Item.h"
+
+// weapon
 #include "Items/Weapons/Weapon.h"
-#include "Animation/AnimMontage.h"
+#include "Components/BoxComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -38,6 +46,10 @@ AMainCharacter::AMainCharacter()
     Eyebrows->AttachmentName = FString("head");
 }
 
+/**
+ * Inherited Overrides of Basic Gameplay
+ */
+
 void AMainCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -52,6 +64,36 @@ void AMainCharacter::BeginPlay()
     }
 
     AnimInstance = GetMesh()->GetAnimInstance();
+}
+
+void AMainCharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
+
+/**
+ * Input
+ */
+
+void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+    if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+    {
+        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
+        EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+        EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
+        EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
+        EnhancedInputComponent->BindAction(
+            AttackBasicAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackBasic);
+        EnhancedInputComponent->BindAction(
+            AttackThreePartComboAction, ETriggerEvent::Completed, this, &AMainCharacter::AttackThreePartCombo);
+        EnhancedInputComponent->BindAction(
+            AttackCircleAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackCircle);
+        EnhancedInputComponent->BindAction(
+            AttackHeavyAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackHeavy);
+    }
 }
 
 void AMainCharacter::Move(const FInputActionValue& Value)
@@ -144,6 +186,10 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     }
 }
 
+/**
+ * COMBAT ATTACKS
+ */
+
 void AMainCharacter::Attack(const FName& AttackType)
 {
     switch (CharacterState)
@@ -193,6 +239,10 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
     }
 }
 
+/**
+ * COMBAT MONTAGES
+ */
+
 void AMainCharacter::PlayMontageOneHandedAttack(const FName AttackName)
 {
     if (AnimInstance && OneHandedAttackMontage)
@@ -210,6 +260,10 @@ void AMainCharacter::PlayMontageEquip(FName SectionName)
         AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
     }
 }
+
+/**
+ * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS
+ */
 
 /**
  * Called from Animation Blueprint's EventGraph
@@ -243,6 +297,18 @@ void AMainCharacter::DrawWeapon()
     }
 }
 
+void AMainCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled)
+{
+    if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+    {
+        EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+    }
+}
+
+/**
+ * COMBAT HELPERS - INTERNAL
+ */
+
 bool AMainCharacter::CanAttack()
 {
     return ActionState == EActionState::EAS_Unoccupied;
@@ -258,30 +324,4 @@ bool AMainCharacter::CanDrawWeapon()
 {
     return ActionState == EActionState::EAS_Unoccupied && CharacterState == ECharacterState::ECS_Unequipped &&
            EquippedWeapon;
-}
-
-void AMainCharacter::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
-void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-    if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-    {
-        EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
-        EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
-        EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
-        EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
-        EnhancedInputComponent->BindAction(
-            AttackBasicAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackBasic);
-        EnhancedInputComponent->BindAction(
-            AttackThreePartComboAction, ETriggerEvent::Completed, this, &AMainCharacter::AttackThreePartCombo);
-        EnhancedInputComponent->BindAction(
-            AttackCircleAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackCircle);
-        EnhancedInputComponent->BindAction(
-            AttackHeavyAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackHeavy);
-    }
 }

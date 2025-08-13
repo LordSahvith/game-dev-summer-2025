@@ -51,4 +51,10 @@ class ULT_GAME_DEV_RPG_API AWeapon : public AItem
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
     USceneComponent* BoxTraceEnd;
+
+  public:
+    FORCEINLINE UBoxComponent* GetWeaponBox() const
+    {
+        return WeaponBox;
+    }
 };

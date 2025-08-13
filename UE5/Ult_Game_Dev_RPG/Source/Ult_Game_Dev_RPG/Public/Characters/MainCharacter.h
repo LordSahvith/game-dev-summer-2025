@@ -26,6 +26,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+    UFUNCTION(BlueprintCallable)
+    void SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled);
+
   protected:
     virtual void BeginPlay() override;
 
