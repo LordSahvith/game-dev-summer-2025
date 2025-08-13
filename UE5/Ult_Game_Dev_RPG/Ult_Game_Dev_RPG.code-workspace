@@ -18,22 +18,6 @@
 			"DOTNET_HOST_PATH": "C:\\Program Files\\Epic Games\\UE_5.6\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64\\dotnet.exe",
 			"DOTNET_MULTILEVEL_LOOKUP": "0",
 			"DOTNET_ROLL_FORWARD": "LatestMajor"
-		},
-		"files.associations": {
-			"__tree": "cpp",
-			"bitset": "cpp",
-			"set": "cpp",
-			"span": "cpp",
-			"__split_buffer": "cpp",
-			"array": "cpp",
-			"deque": "cpp",
-			"list": "cpp",
-			"queue": "cpp",
-			"string": "cpp",
-			"string_view": "cpp",
-			"vector": "cpp",
-			"xstring": "cpp",
-			"xutility": "cpp"
 		}
 	},
 	"extensions": {
@@ -487,7 +471,8 @@
 				"request": "launch",
 				"program": "C:\\Users\\bulle\\Documents\\GitHub\\game-dev-summer-2025\\UE5\\Ult_Game_Dev_RPG\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
 				"preLaunchTask": "Ult_Game_Dev_RPG Win64 Debug Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.6",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -504,7 +489,8 @@
 				"request": "launch",
 				"program": "C:\\Users\\bulle\\Documents\\GitHub\\game-dev-summer-2025\\UE5\\Ult_Game_Dev_RPG\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
 				"preLaunchTask": "Ult_Game_Dev_RPG Win64 DebugGame Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.6",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -521,7 +507,8 @@
 				"request": "launch",
 				"program": "C:\\Users\\bulle\\Documents\\GitHub\\game-dev-summer-2025\\UE5\\Ult_Game_Dev_RPG\\Binaries\\Win64\\UnrealGame.exe",
 				"preLaunchTask": "Ult_Game_Dev_RPG Win64 Development Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.6",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -538,7 +525,8 @@
 				"request": "launch",
 				"program": "C:\\Users\\bulle\\Documents\\GitHub\\game-dev-summer-2025\\UE5\\Ult_Game_Dev_RPG\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
 				"preLaunchTask": "Ult_Game_Dev_RPG Win64 Test Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.6",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
@@ -555,7 +543,8 @@
 				"request": "launch",
 				"program": "C:\\Users\\bulle\\Documents\\GitHub\\game-dev-summer-2025\\UE5\\Ult_Game_Dev_RPG\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
 				"preLaunchTask": "Ult_Game_Dev_RPG Win64 Shipping Build",
-				"args": [],
+				"args": [
+				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.6",
 				"stopAtEntry": false,
 				"console": "integratedTerminal",
