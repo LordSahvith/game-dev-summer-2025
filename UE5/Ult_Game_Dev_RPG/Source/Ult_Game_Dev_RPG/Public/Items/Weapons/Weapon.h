@@ -4,6 +4,8 @@
 #include "Items/Item.h"
 #include "Weapon.generated.h"
 
+class USoundBase;
+
 UCLASS()
 class ULT_GAME_DEV_RPG_API AWeapon : public AItem
 {
@@ -20,4 +22,8 @@ class ULT_GAME_DEV_RPG_API AWeapon : public AItem
 
     virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
+
+  private:
+    UPROPERTY(EditAnywhere, Category = "Weapon Properties")
+    USoundBase* EquipSound;
 };

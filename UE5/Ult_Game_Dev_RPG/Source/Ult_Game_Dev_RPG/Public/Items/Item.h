@@ -52,10 +52,10 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
 
     EItemState ItemState = EItemState::EIS_Hovering;
 
+    UPROPERTY(VisibleAnywhere)
+    USphereComponent* Sphere;
+
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     float RunningTime = 0.f;
-
-    UPROPERTY(VisibleAnywhere)
-    USphereComponent* Sphere;
 };

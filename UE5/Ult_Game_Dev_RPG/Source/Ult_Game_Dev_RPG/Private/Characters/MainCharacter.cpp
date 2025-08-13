@@ -125,20 +125,20 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     {
         OverlappingWeapon->Equip(GetMesh(), EquippedSocket);
         CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-        EquippedWeapon = OverlappingWeapon;
         OverlappingItem = nullptr;
+        EquippedWeapon = OverlappingWeapon;
     }
     else
     {
-        if (CanDisarm())
+        if (CanSheathWeapon())
         {
-            PlayMontageEquip(FName("Disarm"));
+            PlayMontageEquip(SheathWeaponName);
             CharacterState = ECharacterState::ECS_Unequipped;
             ActionState = EActionState::EAS_Sheathing;
         }
-        else if (CanArm())
+        else if (CanDrawWeapon())
         {
-            PlayMontageEquip(FName("Equip"));
+            PlayMontageEquip(DrawWeaponName);
             CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
             ActionState = EActionState::EAS_Sheathing;
         }
@@ -220,12 +220,13 @@ bool AMainCharacter::CanAttack()
     return ActionState == EActionState::EAS_Unoccupied;
 }
 
-bool AMainCharacter::CanDisarm()
+bool AMainCharacter::CanSheathWeapon()
 {
-    return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+    return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped &&
+           EquippedWeapon;
 }
 
-bool AMainCharacter::CanArm()
+bool AMainCharacter::CanDrawWeapon()
 {
     return ActionState == EActionState::EAS_Unoccupied && CharacterState == ECharacterState::ECS_Unequipped &&
            EquippedWeapon;

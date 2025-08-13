@@ -56,6 +56,12 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     FName SheathedSocket = FName("SpineSocket");
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    FName SheathWeaponName = FName("SheathWeapon");
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    FName DrawWeaponName = FName("DrawWeapon");
+
     /**
      * Callbacks for Input
      */
@@ -104,8 +110,8 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UFUNCTION(BlueprintCallable)
     bool CanAttack();
 
-    bool CanDisarm();
-    bool CanArm();
+    bool CanSheathWeapon();
+    bool CanDrawWeapon();
 
   private:
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
