@@ -11,6 +11,7 @@ class ULT_GAME_DEV_RPG_API AWeapon : public AItem
 
   public:
     void Equip(USceneComponent* InParent, FName InSocketName);
+    void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
   protected:
     virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

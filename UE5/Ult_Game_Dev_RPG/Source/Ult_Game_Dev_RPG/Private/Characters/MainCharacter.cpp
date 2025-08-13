@@ -123,7 +123,7 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
     if (OverlappingWeapon)
     {
-        OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+        OverlappingWeapon->Equip(GetMesh(), EquippedSocket);
         CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
         EquippedWeapon = OverlappingWeapon;
         OverlappingItem = nullptr;
@@ -184,9 +184,7 @@ void AMainCharacter::PlayMontageEquip(FName SectionName)
 }
 
 /**
- * BP called from: Animation Blueprint's EventGraph
- * Animation Notification: AnimNotify_AttackEnd
- * set in: Animation Montage as a "Notifies" property (AttackEnd)
+ * Called from Animation Blueprint's EventGraph
  */
 void AMainCharacter::AttackEnd()
 {
@@ -194,13 +192,27 @@ void AMainCharacter::AttackEnd()
 }
 
 /**
- * BP called from: Animation Blueprint's EventGraph
- * Animation Notification: AnimNotify_EquipEnd
- * set in: Animation Montage as a "Notifies" property (EquipEnd)
+ * Called from Animation Blueprint's EventGraph
  */
-void AMainCharacter::EquipEnd()
+void AMainCharacter::SheathEnd()
 {
     ActionState = EActionState::EAS_Unoccupied;
+}
+
+void AMainCharacter::SheathWeapon()
+{
+    if (EquippedWeapon)
+    {
+        EquippedWeapon->AttachMeshToSocket(GetMesh(), SheathedSocket);
+    }
+}
+
+void AMainCharacter::DrawWeapon()
+{
+    if (EquippedWeapon)
+    {
+        EquippedWeapon->AttachMeshToSocket(GetMesh(), EquippedSocket);
+    }
 }
 
 bool AMainCharacter::CanAttack()

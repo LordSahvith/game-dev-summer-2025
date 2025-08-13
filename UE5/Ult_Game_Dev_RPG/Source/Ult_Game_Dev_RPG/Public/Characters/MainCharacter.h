@@ -50,6 +50,12 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* AttackAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    FName EquippedSocket = FName("RightHandSocket");
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
+    FName SheathedSocket = FName("SpineSocket");
+
     /**
      * Callbacks for Input
      */
@@ -77,12 +83,24 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     void PlayMontageOneHandedAttack();
     void PlayMontageEquip(FName SectionName);
 
+    /**
+     * Functions for Animation Blueprints
+     */
     UFUNCTION(BlueprintCallable)
     void AttackEnd();
 
     UFUNCTION(BlueprintCallable)
-    void EquipEnd();
+    void SheathEnd();
 
+    UFUNCTION(BlueprintCallable)
+    void SheathWeapon();
+
+    UFUNCTION(BlueprintCallable)
+    void DrawWeapon();
+
+    /**
+     * Misc.
+     */
     UFUNCTION(BlueprintCallable)
     bool CanAttack();
 
