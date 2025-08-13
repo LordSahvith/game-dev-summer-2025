@@ -137,8 +137,8 @@ void AMainCharacter::Attack(const FInputActionValue& Value)
         switch (CharacterState)
         {
             case ECharacterState::ECS_EquippedOneHandedWeapon:
-                PlayOneHandedAttackMontage();
                 ActionState = EActionState::EAS_Attacking;
+                PlayOneHandedAttackMontage();
                 break;
         }
     }
