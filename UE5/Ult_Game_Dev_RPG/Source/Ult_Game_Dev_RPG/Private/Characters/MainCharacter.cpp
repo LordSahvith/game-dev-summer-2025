@@ -145,32 +145,76 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     }
 }
 
-void AMainCharacter::Attack(const FInputActionValue& Value)
+void AMainCharacter::Attack(const FName& AttackType)
 {
+    switch (CharacterState)
+    {
+        case ECharacterState::ECS_EquippedOneHandedWeapon:
+            ActionState = EActionState::EAS_Attacking;
+            PlayMontageOneHandedAttack(AttackType);
+            break;
+    }
+}
+
+void AMainCharacter::AttackBasic(const FInputActionValue& Value)
+{
+
     // ActionState gets reset from Animation Blueprint
     // calling: AMainCharacter::AttackEnd()
     if (CanAttack())
     {
-        switch (CharacterState)
+        if (GEngine)
         {
-            case ECharacterState::ECS_EquippedOneHandedWeapon:
-                ActionState = EActionState::EAS_Attacking;
-                PlayMontageOneHandedAttack();
-                break;
+            FString Message = FString("Combo - 1");
+            GEngine->AddOnScreenDebugMessage(2, 2.f, FColor::Cyan, Message);
         }
+        Attack(BasicAttack);
     }
 }
 
-void AMainCharacter::PlayMontageOneHandedAttack()
+void AMainCharacter::AttackThreePartCombo(const FInputActionValue& Value)
+{
+    if (GEngine)
+    {
+        FString Message = FString("Combo - Finished");
+        GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, Message);
+    }
+}
+
+void AMainCharacter::AttackCircle(const FInputActionValue& Value)
+{
+
+    if (CanAttack())
+    {
+        if (GEngine)
+        {
+            FString Message = FString("Combo - 2");
+            GEngine->AddOnScreenDebugMessage(3, 2.f, FColor::Cyan, Message);
+        }
+        Attack(CircleAttack);
+    }
+}
+
+void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
+{
+
+    if (CanAttack())
+    {
+        if (GEngine)
+        {
+            FString Message = FString("Combo - 3");
+            GEngine->AddOnScreenDebugMessage(4, 2.f, FColor::Cyan, Message);
+        }
+        Attack(HeavyAttack);
+    }
+}
+
+void AMainCharacter::PlayMontageOneHandedAttack(const FName AttackName)
 {
     if (AnimInstance && OneHandedAttackMontage)
     {
-        int32 AttackType = FMath::RandRange(1, 3);
-        FString AttackName = "Attack";
-        AttackName.AppendInt(AttackType);
-
         AnimInstance->Montage_Play(OneHandedAttackMontage);
-        AnimInstance->Montage_JumpToSection(FName(AttackName), OneHandedAttackMontage);
+        AnimInstance->Montage_JumpToSection(AttackName, OneHandedAttackMontage);
     }
 }
 
@@ -247,6 +291,13 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
-        EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AMainCharacter::Attack);
+        EnhancedInputComponent->BindAction(AttackBasicAction, ETriggerEvent::Triggered, this,
+                                           &AMainCharacter::AttackBasic);
+        EnhancedInputComponent->BindAction(AttackThreePartComboAction, ETriggerEvent::Completed, this,
+                                           &AMainCharacter::AttackThreePartCombo);
+        EnhancedInputComponent->BindAction(AttackCircleAction, ETriggerEvent::Triggered, this,
+                                           &AMainCharacter::AttackCircle);
+        EnhancedInputComponent->BindAction(AttackHeavyAction, ETriggerEvent::Triggered, this,
+                                           &AMainCharacter::AttackHeavy);
     }
 }

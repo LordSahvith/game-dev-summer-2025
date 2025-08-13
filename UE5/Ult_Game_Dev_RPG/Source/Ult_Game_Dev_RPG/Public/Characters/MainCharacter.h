@@ -48,7 +48,16 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UInputAction* EquipAction;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* AttackAction;
+    UInputAction* AttackBasicAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* AttackThreePartComboAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* AttackCircleAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+    UInputAction* AttackHeavyAction;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     FName EquippedSocket = FName("RightHandSocket");
@@ -69,7 +78,10 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     void Look(const FInputActionValue& Value);
     virtual void Jump() override;
     void Equip(const FInputActionValue& Value);
-    void Attack(const FInputActionValue& Value);
+    void AttackBasic(const FInputActionValue& Value);
+    void AttackThreePartCombo(const FInputActionValue& Value);
+    void AttackCircle(const FInputActionValue& Value);
+    void AttackHeavy(const FInputActionValue& Value);
 
     /**
      * Animation Montages
@@ -86,7 +98,10 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     /**
      * Play Montage Functions
      */
-    void PlayMontageOneHandedAttack();
+    const FName BasicAttack = FName("BasicAttack");
+    const FName CircleAttack = FName("CircleAttack");
+    const FName HeavyAttack = FName("HeavyAttack");
+    void PlayMontageOneHandedAttack(const FName AttackName);
     void PlayMontageEquip(FName SectionName);
 
     /**
@@ -138,6 +153,8 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     AWeapon* EquippedWeapon;
+
+    void Attack(const FName& AttackType);
 
   public:
     FORCEINLINE void SetOverlappingItem(AItem* Item)
