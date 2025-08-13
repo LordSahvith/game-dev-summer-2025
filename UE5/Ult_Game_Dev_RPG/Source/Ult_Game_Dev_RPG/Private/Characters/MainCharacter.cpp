@@ -132,13 +132,13 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     {
         if (CanDisarm())
         {
-            PlayEquipMontage(FName("Disarm"));
+            PlayMontageEquip(FName("Disarm"));
             CharacterState = ECharacterState::ECS_Unequipped;
             ActionState = EActionState::EAS_Sheathing;
         }
         else if (CanArm())
         {
-            PlayEquipMontage(FName("Equip"));
+            PlayMontageEquip(FName("Equip"));
             CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
             ActionState = EActionState::EAS_Sheathing;
         }
@@ -155,13 +155,13 @@ void AMainCharacter::Attack(const FInputActionValue& Value)
         {
             case ECharacterState::ECS_EquippedOneHandedWeapon:
                 ActionState = EActionState::EAS_Attacking;
-                PlayOneHandedAttackMontage();
+                PlayMontageOneHandedAttack();
                 break;
         }
     }
 }
 
-void AMainCharacter::PlayOneHandedAttackMontage()
+void AMainCharacter::PlayMontageOneHandedAttack()
 {
     if (AnimInstance && OneHandedAttackMontage)
     {
@@ -174,7 +174,7 @@ void AMainCharacter::PlayOneHandedAttackMontage()
     }
 }
 
-void AMainCharacter::PlayEquipMontage(FName SectionName)
+void AMainCharacter::PlayMontageEquip(FName SectionName)
 {
     if (AnimInstance && EquipMontage)
     {

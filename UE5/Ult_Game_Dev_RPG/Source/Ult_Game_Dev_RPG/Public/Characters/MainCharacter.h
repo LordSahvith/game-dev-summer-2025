@@ -74,8 +74,8 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     /**
      * Play Montage Functions
      */
-    void PlayOneHandedAttackMontage();
-    void PlayEquipMontage(FName SectionName);
+    void PlayMontageOneHandedAttack();
+    void PlayMontageEquip(FName SectionName);
 
     UFUNCTION(BlueprintCallable)
     void AttackEnd();
