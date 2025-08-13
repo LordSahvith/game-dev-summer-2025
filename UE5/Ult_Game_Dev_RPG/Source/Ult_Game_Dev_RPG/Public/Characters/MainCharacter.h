@@ -49,6 +49,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* AttackAction;
 
+    /**
+     * Callbacks for Input
+     */
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
     virtual void Jump() override;
@@ -63,8 +66,24 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
     UAnimMontage* OneHandedAttackMontage;
 
+    /**
+     * Play Montage Functions
+     */
+    void PlayOneHandedAttackMontage();
+
+    UFUNCTION(BlueprintCallable)
+    void AttackEnd();
+
+    UFUNCTION(BlueprintCallable)
+    bool CanAttack();
+
   private:
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+    UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+    EActionState ActionState = EActionState::EAS_Unoccupied;
+
+    UAnimInstance* AnimInstance;
 
     UPROPERTY(VisibleAnywhere)
     USpringArmComponent* SpringArm;

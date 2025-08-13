@@ -50,6 +50,8 @@ void AMainCharacter::BeginPlay()
             Subsystem->AddMappingContext(CharacterMappingContext, 0);
         }
     }
+
+    AnimInstance = GetMesh()->GetAnimInstance();
 }
 
 void AMainCharacter::Move(const FInputActionValue& Value)
@@ -125,10 +127,23 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
 void AMainCharacter::Attack(const FInputActionValue& Value)
 {
-    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    // ActionState gets reset from Animation Blueprint
+    // calling: AMainCharacter::AttackEnd()
+    if (CanAttack())
+    {
+        switch (CharacterState)
+        {
+            case ECharacterState::ECS_EquippedOneHandedWeapon:
+                PlayOneHandedAttackMontage();
+                ActionState = EActionState::EAS_Attacking;
+                break;
+        }
+    }
+}
 
-    // One-Handed Attacks
-    if (AnimInstance && OneHandedAttackMontage && CharacterState == ECharacterState::ECS_EquippedOneHandedWeapon)
+void AMainCharacter::PlayOneHandedAttackMontage()
+{
+    if (AnimInstance && OneHandedAttackMontage)
     {
         int32 AttackType = FMath::RandRange(1, 3);
         FString AttackName = "Attack";
@@ -137,6 +152,21 @@ void AMainCharacter::Attack(const FInputActionValue& Value)
         AnimInstance->Montage_Play(OneHandedAttackMontage);
         AnimInstance->Montage_JumpToSection(FName(AttackName), OneHandedAttackMontage);
     }
+}
+
+/**
+ * BP called from: Animation Blueprint's EventGraph
+ * Animation Notification: AnimNotify_AttackEnd
+ * set in: Animation Montage as a "Notifies" property (AttackEnd)
+ */
+void AMainCharacter::AttackEnd()
+{
+    ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AMainCharacter::CanAttack()
+{
+    return ActionState == EActionState::EAS_Unoccupied;
 }
 
 void AMainCharacter::Tick(float DeltaTime)
