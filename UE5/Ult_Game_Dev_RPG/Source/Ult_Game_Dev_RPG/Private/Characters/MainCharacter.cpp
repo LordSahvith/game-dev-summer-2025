@@ -56,7 +56,7 @@ void AMainCharacter::BeginPlay()
 
 void AMainCharacter::Move(const FInputActionValue& Value)
 {
-    if (ActionState == EActionState::EAS_Attacking)
+    if (ActionState != EActionState::EAS_Unoccupied)
         return;
 
     const FVector2D MovementVector = Value.Get<FVector2D>();
@@ -125,6 +125,23 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     {
         OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
         CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+        EquippedWeapon = OverlappingWeapon;
+        OverlappingItem = nullptr;
+    }
+    else
+    {
+        if (CanDisarm())
+        {
+            PlayEquipMontage(FName("Disarm"));
+            CharacterState = ECharacterState::ECS_Unequipped;
+            ActionState = EActionState::EAS_Sheathing;
+        }
+        else if (CanArm())
+        {
+            PlayEquipMontage(FName("Equip"));
+            CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+            ActionState = EActionState::EAS_Sheathing;
+        }
     }
 }
 
@@ -157,6 +174,15 @@ void AMainCharacter::PlayOneHandedAttackMontage()
     }
 }
 
+void AMainCharacter::PlayEquipMontage(FName SectionName)
+{
+    if (AnimInstance && EquipMontage)
+    {
+        AnimInstance->Montage_Play(EquipMontage);
+        AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
+    }
+}
+
 /**
  * BP called from: Animation Blueprint's EventGraph
  * Animation Notification: AnimNotify_AttackEnd
@@ -167,9 +193,30 @@ void AMainCharacter::AttackEnd()
     ActionState = EActionState::EAS_Unoccupied;
 }
 
+/**
+ * BP called from: Animation Blueprint's EventGraph
+ * Animation Notification: AnimNotify_EquipEnd
+ * set in: Animation Montage as a "Notifies" property (EquipEnd)
+ */
+void AMainCharacter::EquipEnd()
+{
+    ActionState = EActionState::EAS_Unoccupied;
+}
+
 bool AMainCharacter::CanAttack()
 {
     return ActionState == EActionState::EAS_Unoccupied;
+}
+
+bool AMainCharacter::CanDisarm()
+{
+    return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+bool AMainCharacter::CanArm()
+{
+    return ActionState == EActionState::EAS_Unoccupied && CharacterState == ECharacterState::ECS_Unequipped &&
+           EquippedWeapon;
 }
 
 void AMainCharacter::Tick(float DeltaTime)

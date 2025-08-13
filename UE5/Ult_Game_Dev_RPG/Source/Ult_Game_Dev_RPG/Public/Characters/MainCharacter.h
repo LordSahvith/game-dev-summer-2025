@@ -14,6 +14,7 @@ class UCameraComponent;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
+class AWeapon;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
@@ -63,19 +64,30 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
      */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
     UAnimMontage* JumpMontage;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
     UAnimMontage* OneHandedAttackMontage;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
+    UAnimMontage* EquipMontage;
 
     /**
      * Play Montage Functions
      */
     void PlayOneHandedAttackMontage();
+    void PlayEquipMontage(FName SectionName);
 
     UFUNCTION(BlueprintCallable)
     void AttackEnd();
 
     UFUNCTION(BlueprintCallable)
+    void EquipEnd();
+
+    UFUNCTION(BlueprintCallable)
     bool CanAttack();
+
+    bool CanDisarm();
+    bool CanArm();
 
   private:
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
@@ -91,14 +103,17 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere)
     UCameraComponent* ViewCamera;
 
-    UPROPERTY(VisibleAnywhere, Category = Hair)
+    UPROPERTY(VisibleAnywhere, Category = "Hair")
     UGroomComponent* Hair;
 
-    UPROPERTY(VisibleAnywhere, Category = Hair)
+    UPROPERTY(VisibleAnywhere, Category = "Hair")
     UGroomComponent* Eyebrows;
 
     UPROPERTY(VisibleInstanceOnly)
     AItem* OverlappingItem;
+
+    UPROPERTY(VisibleAnywhere, Category = "Weapon")
+    AWeapon* EquippedWeapon;
 
   public:
     FORCEINLINE void SetOverlappingItem(AItem* Item)
