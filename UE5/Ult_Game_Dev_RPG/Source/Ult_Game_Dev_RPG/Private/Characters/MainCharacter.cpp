@@ -265,17 +265,11 @@ void AMainCharacter::PlayMontageEquip(FName SectionName)
  * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS
  */
 
-/**
- * Called from Animation Blueprint's EventGraph
- */
 void AMainCharacter::AttackEnd()
 {
     ActionState = EActionState::EAS_Unoccupied;
 }
 
-/**
- * Called from Animation Blueprint's EventGraph
- */
 void AMainCharacter::SheathEnd()
 {
     ActionState = EActionState::EAS_Unoccupied;

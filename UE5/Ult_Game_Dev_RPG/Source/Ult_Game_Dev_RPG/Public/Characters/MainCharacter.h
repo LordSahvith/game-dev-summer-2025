@@ -50,6 +50,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* EquipAction;
 
+    /**
+     * Attacks
+     */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* AttackBasicAction;
 
@@ -62,6 +65,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction* AttackHeavyAction;
 
+    /**
+     * Weapon Sockets Names
+     */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
     FName EquippedSocket = FName("RightHandSocket");
 
@@ -108,7 +114,7 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     void PlayMontageEquip(FName SectionName);
 
     /**
-     * Functions for Animation Blueprints
+     * Helpers for Animation Blueprint Notifiers
      */
     UFUNCTION(BlueprintCallable)
     void AttackEnd();
@@ -132,6 +138,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     bool CanDrawWeapon();
 
   private:
+    /**
+     * States
+     */
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
     UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -139,6 +148,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     UAnimInstance* AnimInstance;
 
+    /**
+     * Scenes
+     */
     UPROPERTY(VisibleAnywhere)
     USpringArmComponent* SpringArm;
 
@@ -151,12 +163,18 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere, Category = "Hair")
     UGroomComponent* Eyebrows;
 
+    /**
+     * Weapon / Items
+     */
     UPROPERTY(VisibleInstanceOnly)
     AItem* OverlappingItem;
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     AWeapon* EquippedWeapon;
 
+    /**
+     * Combat
+     */
     void Attack(const FName& AttackType);
 
   public:
