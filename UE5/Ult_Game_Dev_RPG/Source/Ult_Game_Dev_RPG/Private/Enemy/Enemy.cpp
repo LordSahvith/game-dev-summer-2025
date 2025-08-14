@@ -1,7 +1,7 @@
 #include "Enemy/Enemy.h"
-
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 /**
  * DEBUG: REMOVE WHEN DONE
@@ -58,6 +58,11 @@ void AEnemy::PlayMontageHitReact(const FName& AttackName)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
     DirectionalHitReact(ImpactPoint);
+
+    if (HitSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+    }
 }
 
 /**

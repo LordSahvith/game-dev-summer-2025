@@ -45,6 +45,12 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     void PlayMontageHitReact(const FName& AttackName);
 
     /**
+     * Sounds
+     */
+    UPROPERTY(EditAnywhere, Category = "Sounds")
+    USoundBase* HitSound;
+
+    /**
      * Helpers
      */
     void DirectionalHitReact(const FVector& ImpactPoint);
