@@ -6,6 +6,7 @@
 #include "Enemy.generated.h"
 
 class UAnimMontage;
+class UParticleSystem;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -45,10 +46,16 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     void PlayMontageHitReact(const FName& AttackName);
 
     /**
-     * Sounds
+     * Sound Effects
      */
-    UPROPERTY(EditAnywhere, Category = "Sounds")
+    UPROPERTY(EditAnywhere, Category = "Sound Effects")
     USoundBase* HitSound;
+
+    /**
+     * Visual Effects
+     */
+    UPROPERTY(EditAnywhere, Category = "Visual Effects")
+    UParticleSystem* HitParticles;
 
     /**
      * Helpers

@@ -3,12 +3,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-/**
- * DEBUG: REMOVE WHEN DONE
- */
-#include "Ult_Game_Dev_RPG/DebugMacros.h"
-#include "Kismet/KismetSystemLibrary.h"
-
 AEnemy::AEnemy()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -63,6 +57,11 @@ void AEnemy::GetHit(const FVector& ImpactPoint)
     {
         UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
     }
+
+    if (GetWorld() && HitParticles)
+    {
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
+    }
 }
 
 /**
@@ -106,27 +105,4 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
     {
         PlayMontageHitReact(ReactFromBack);
     }
-
-    /**
-     * DEBUG: START REMOVE WHEN DONE
-     */
-
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Cyan, FString::Printf(TEXT("Theta: %f"), Theta));
-    }
-
-    UKismetSystemLibrary::DrawDebugArrow(
-        this, GetActorLocation(), GetActorLocation() + Forward * 60.f, 5.f, FColor::Red, 5.f);
-    UKismetSystemLibrary::DrawDebugArrow(
-        this, GetActorLocation(), GetActorLocation() + ToHit * 60.f, 5.f, FColor::Green, 5.f);
-    DRAW_SPHERE_COLOR(ImpactPoint, FColor::Red);
-    UKismetSystemLibrary::DrawDebugArrow(
-        this, GetActorLocation(), GetActorLocation() + CrossProduct * 60.f, 5.f, FColor::Blue, 5.f);
-
-    DRAW_SPHERE_COLOR(ImpactPoint, FColor::Red);
-
-    /**
-     * DEBUG: END REMOVE WHEN DONE
-     */
 }
