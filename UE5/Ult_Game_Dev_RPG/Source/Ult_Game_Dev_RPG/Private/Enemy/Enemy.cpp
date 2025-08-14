@@ -49,7 +49,7 @@ void AEnemy::PlayMontageHitReact(const FName& AttackName)
  * INTERFACES
  */
 
-void AEnemy::GetHit(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
     DirectionalHitReact(ImpactPoint);
 

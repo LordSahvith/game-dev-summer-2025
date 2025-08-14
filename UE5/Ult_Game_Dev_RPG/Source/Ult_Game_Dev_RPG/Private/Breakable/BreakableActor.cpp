@@ -1,5 +1,6 @@
 #include "Breakable/BreakableActor.h"
 #include "GeometryCollection/GeometryCollectionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ABreakableActor::ABreakableActor()
 {
@@ -21,6 +22,6 @@ void ABreakableActor::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void ABreakableActor::GetHit(const FVector& ImpactPoint)
+void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
 {
 }
