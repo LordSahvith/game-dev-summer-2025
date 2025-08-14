@@ -7,6 +7,8 @@
 
 class UGeometryCollectionComponent;
 class USoundBase;
+class ATreasure;
+class UCapsuleComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API ABreakableActor : public AActor, public IHitInterface
@@ -22,13 +24,13 @@ class ULT_GAME_DEV_RPG_API ABreakableActor : public AActor, public IHitInterface
   protected:
     virtual void BeginPlay() override;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    UCapsuleComponent* Capsule;
+
   private:
     UPROPERTY(VisibleAnywhere)
     UGeometryCollectionComponent* GeometryCollection;
 
-    /**
-     * Sound Effects
-     */
-    UPROPERTY(EditAnywhere, Category = "Sound Effects")
-    USoundBase* HitSound;
+    UPROPERTY(EditAnywhere, Category = "Breakable Properties")
+    TSubclassOf<ATreasure> TreasureClass;
 };
