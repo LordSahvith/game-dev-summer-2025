@@ -243,7 +243,7 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
  * COMBAT MONTAGES
  */
 
-void AMainCharacter::PlayMontageOneHandedAttack(const FName AttackName)
+void AMainCharacter::PlayMontageOneHandedAttack(const FName& AttackName)
 {
     if (AnimInstance && OneHandedAttackMontage)
     {
@@ -252,7 +252,7 @@ void AMainCharacter::PlayMontageOneHandedAttack(const FName AttackName)
     }
 }
 
-void AMainCharacter::PlayMontageEquip(FName SectionName)
+void AMainCharacter::PlayMontageEquip(const FName& SectionName)
 {
     if (AnimInstance && EquipMontage)
     {

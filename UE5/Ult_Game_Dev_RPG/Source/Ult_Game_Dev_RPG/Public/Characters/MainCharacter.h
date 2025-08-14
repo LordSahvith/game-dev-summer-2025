@@ -38,81 +38,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* CharacterMappingContext;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* MoveAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* LookAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* JumpAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* EquipAction;
-
-    /**
-     * Attacks
-     */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* AttackBasicAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* AttackThreePartComboAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* AttackCircleAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction* AttackHeavyAction;
-
-    /**
-     * Weapon Sockets Names
-     */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    FName EquippedSocket = FName("RightHandSocket");
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    FName SheathedSocket = FName("SpineSocket");
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    FName SheathWeaponName = FName("SheathWeapon");
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon")
-    FName DrawWeaponName = FName("DrawWeapon");
-
-    /**
-     * Callbacks for Input
-     */
-    void Move(const FInputActionValue& Value);
-    void Look(const FInputActionValue& Value);
-    virtual void Jump() override;
-    void Equip(const FInputActionValue& Value);
-    void AttackBasic(const FInputActionValue& Value);
-    void AttackThreePartCombo(const FInputActionValue& Value);
-    void AttackCircle(const FInputActionValue& Value);
-    void AttackHeavy(const FInputActionValue& Value);
-
-    /**
-     * Animation Montages
-     */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
-    UAnimMontage* JumpMontage;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
-    UAnimMontage* OneHandedAttackMontage;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Montages")
-    UAnimMontage* EquipMontage;
-
-    /**
-     * Play Montage Functions
-     */
-    const FName BasicAttack = FName("BasicAttack");
-    const FName CircleAttack = FName("CircleAttack");
-    const FName HeavyAttack = FName("HeavyAttack");
-    void PlayMontageOneHandedAttack(const FName AttackName);
-    void PlayMontageEquip(FName SectionName);
-
     /**
      * Helpers for Animation Blueprint Notifiers
      */
@@ -164,6 +89,49 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UGroomComponent* Eyebrows;
 
     /**
+     * INPUT
+     */
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* MoveAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* LookAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* JumpAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* EquipAction;
+
+    /**
+     * Callbacks for Input
+     */
+    void Move(const FInputActionValue& Value);
+    void Look(const FInputActionValue& Value);
+    virtual void Jump() override;
+    void Equip(const FInputActionValue& Value);
+    void AttackBasic(const FInputActionValue& Value);
+    void AttackThreePartCombo(const FInputActionValue& Value);
+    void AttackCircle(const FInputActionValue& Value);
+    void AttackHeavy(const FInputActionValue& Value);
+
+    /**
+     * Attacks
+     */
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* AttackBasicAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* AttackThreePartComboAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* AttackCircleAction;
+
+    UPROPERTY(EditAnywhere, Category = "Input")
+    UInputAction* AttackHeavyAction;
+
+    /**
      * Weapon / Items
      */
     UPROPERTY(VisibleInstanceOnly)
@@ -173,9 +141,49 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     AWeapon* EquippedWeapon;
 
     /**
+     * Weapon Sockets Names
+     */
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    FName EquippedSocket = FName("RightHandSocket");
+
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    FName SheathedSocket = FName("SpineSocket");
+
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    FName SheathWeaponName = FName("SheathWeapon");
+
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    FName DrawWeaponName = FName("DrawWeapon");
+
+    /**
      * Combat
      */
     void Attack(const FName& AttackType);
+
+    /**
+     * Animation Blueprint Notify Names
+     */
+    const FName BasicAttack = FName("BasicAttack");
+    const FName CircleAttack = FName("CircleAttack");
+    const FName HeavyAttack = FName("HeavyAttack");
+
+    /**
+     * Animation Montages
+     */
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* JumpMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* OneHandedAttackMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* EquipMontage;
+
+    /**
+     * Play Montage Functions
+     */
+    void PlayMontageOneHandedAttack(const FName& AttackName);
+    void PlayMontageEquip(const FName& SectionName);
 
   public:
     FORCEINLINE void SetOverlappingItem(AItem* Item)

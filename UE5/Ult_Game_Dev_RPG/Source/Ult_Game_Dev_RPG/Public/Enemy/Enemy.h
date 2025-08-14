@@ -5,6 +5,8 @@
 #include "Interfaces/HitInterface.h"
 #include "Enemy.generated.h"
 
+class UAnimMontage;
+
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 {
@@ -19,4 +21,26 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
   protected:
     virtual void BeginPlay() override;
+
+  private:
+    UAnimInstance* AnimInstance;
+
+    /**
+     * Animation Blueprint Notify Names
+     */
+    const FName ReactFromBack = FName("FromBack");
+    const FName ReactFromFront = FName("FromFront");
+    const FName ReactFromLeft = FName("FromLeft");
+    const FName ReactFromRight = FName("FromRight");
+
+    /**
+     * Animation Montages
+     */
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* HitReactMontage;
+
+    /**
+     * Play Montage Functions
+     */
+    void PlayMontageHitReact(const FName& AttackName);
 };

@@ -5,7 +5,6 @@
 
 #include "Ult_Game_Dev_RPG/DebugMacros.h"
 
-// Sets default values
 AEnemy::AEnemy()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -18,22 +17,34 @@ AEnemy::AEnemy()
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
 }
 
-// Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
     Super::BeginPlay();
+
+    AnimInstance = GetMesh()->GetAnimInstance();
 }
 
-// Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+/**
+ * COMBAT MONTAGES
+ */
+
+void AEnemy::PlayMontageHitReact(const FName& AttackName)
+{
+    if (AnimInstance && HitReactMontage)
+    {
+        AnimInstance->Montage_Play(HitReactMontage);
+        AnimInstance->Montage_JumpToSection(AttackName, HitReactMontage);
+    }
 }
 
 /**
@@ -43,4 +54,5 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::GetHit(const FVector& ImpactPoint)
 {
     DRAW_SPHERE_COLOR(ImpactPoint, FColor::Red);
+    PlayMontageHitReact(ReactFromFront);
 }
