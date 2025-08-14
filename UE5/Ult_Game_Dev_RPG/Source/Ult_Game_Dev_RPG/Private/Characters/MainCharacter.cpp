@@ -296,6 +296,7 @@ void AMainCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type Collisio
     if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
     {
         EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+        EquippedWeapon->IgnoreActors.Empty();
     }
 }
 

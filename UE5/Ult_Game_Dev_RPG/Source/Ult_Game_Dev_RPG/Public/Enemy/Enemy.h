@@ -43,4 +43,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
      * Play Montage Functions
      */
     void PlayMontageHitReact(const FName& AttackName);
+
+    /**
+     * Helpers
+     */
+    void DirectionalHitReact(const FVector& ImpactPoint);
 };
