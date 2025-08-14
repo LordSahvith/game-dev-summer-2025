@@ -3,6 +3,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "Ult_Game_Dev_RPG/DebugMacros.h"
+
 // Sets default values
 AEnemy::AEnemy()
 {
@@ -32,4 +34,13 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+/**
+ * INTERFACES
+ */
+
+void AEnemy::GetHit(const FVector& ImpactPoint)
+{
+    DRAW_SPHERE_COLOR(ImpactPoint, FColor::Red);
 }
