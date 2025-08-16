@@ -8,6 +8,7 @@
 class UAnimMontage;
 class UParticleSystem;
 class UAttributeComponent;
+class UWidgetComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -29,6 +30,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
     UPROPERTY(VisibleAnywhere)
     UAttributeComponent* Attributes;
+
+    UPROPERTY(VisibleAnywhere)
+    UWidgetComponent* HealthBarWidget;
 
     /**
      * Animation Blueprint Notify Names

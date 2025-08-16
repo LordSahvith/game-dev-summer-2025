@@ -3,6 +3,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
+#include "HUD/HealthBarComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -16,6 +17,9 @@ AEnemy::AEnemy()
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
 
     Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
+
+    HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
+    HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
 void AEnemy::BeginPlay()
