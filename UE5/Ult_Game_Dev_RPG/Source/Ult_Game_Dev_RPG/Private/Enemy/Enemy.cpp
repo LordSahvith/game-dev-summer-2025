@@ -27,7 +27,11 @@ void AEnemy::BeginPlay()
     Super::BeginPlay();
 
     AnimInstance = GetMesh()->GetAnimInstance();
-    HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+
+    if (HealthBarWidget)
+    {
+        HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+    }
 }
 
 void AEnemy::Tick(float DeltaTime)
