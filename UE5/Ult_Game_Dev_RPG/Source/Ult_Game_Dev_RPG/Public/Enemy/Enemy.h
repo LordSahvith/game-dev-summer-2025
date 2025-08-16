@@ -7,6 +7,7 @@
 
 class UAnimMontage;
 class UParticleSystem;
+class UAttributeComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -25,6 +26,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
   private:
     UAnimInstance* AnimInstance;
+
+    UPROPERTY(VisibleAnywhere)
+    UAttributeComponent* Attributes;
 
     /**
      * Animation Blueprint Notify Names
