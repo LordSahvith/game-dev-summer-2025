@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
 class UAnimMontage;
@@ -30,6 +31,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
   protected:
     virtual void BeginPlay() override;
     void Die();
+
+    UPROPERTY(BlueprintReadOnly)
+    EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
   private:
     UAnimInstance* AnimInstance;
@@ -78,4 +82,6 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
      * Helpers
      */
     void DirectionalHitReact(const FVector& ImpactPoint);
+
+    EDeathPose GetDeathPose(int32 PoseType);
 };

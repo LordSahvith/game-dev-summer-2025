@@ -152,5 +152,38 @@ void AEnemy::Die()
 
         AnimInstance->Montage_Play(DeathMontage);
         AnimInstance->Montage_JumpToSection(FName(AttackName), DeathMontage);
+        DeathPose = GetDeathPose(Selection);
     }
+}
+
+EDeathPose AEnemy::GetDeathPose(int32 PoseType)
+{
+    EDeathPose Pose;
+
+    switch (PoseType)
+    {
+        case 1:
+            Pose = EDeathPose::EDP_Death1;
+            break;
+        case 2:
+            Pose = EDeathPose::EDP_Death2;
+            break;
+        case 3:
+            Pose = EDeathPose::EDP_Death3;
+            break;
+        case 4:
+            Pose = EDeathPose::EDP_Death4;
+            break;
+        case 5:
+            Pose = EDeathPose::EDP_Death5;
+            break;
+        case 6:
+            Pose = EDeathPose::EDP_Death6;
+            break;
+        default:
+            Pose = EDeathPose::EDP_Alive;
+            break;
+    }
+
+    return Pose;
 }
