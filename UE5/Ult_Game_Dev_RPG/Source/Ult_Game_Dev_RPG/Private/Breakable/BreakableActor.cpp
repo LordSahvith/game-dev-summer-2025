@@ -32,7 +32,7 @@ void ABreakableActor::Tick(float DeltaTime)
 void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
 {
     // 1/10 times it won't spawn treasure
-    bool bShouldSpawnTreasure = FMath::RandRange(0, 10) == 10;
+    bool bShouldSpawnTreasure = FMath::RandRange(0, TreasureSpawnAmount) == TreasureSpawnAmount;
     if (bShouldSpawnTreasure || bHasAlreadySpawnedTreasure) return;
 
     if (GetWorld() && TreasureClasses.Num() > 0)

@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,6 +5,7 @@
 #include "Item.generated.h"
 
 class USphereComponent;
+class UNiagaraComponent;
 
 enum class EItemState : uint8
 {
@@ -59,6 +58,9 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
 
     UPROPERTY(VisibleAnywhere)
     USphereComponent* Sphere;
+
+    UPROPERTY(EditAnywhere)
+    UNiagaraComponent* EmbersEffect;
 
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
