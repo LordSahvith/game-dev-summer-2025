@@ -29,6 +29,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
   protected:
     virtual void BeginPlay() override;
+    void Die();
 
   private:
     UAnimInstance* AnimInstance;
@@ -52,6 +53,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
      */
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* HitReactMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* DeathMontage;
 
     /**
      * Play Montage Functions

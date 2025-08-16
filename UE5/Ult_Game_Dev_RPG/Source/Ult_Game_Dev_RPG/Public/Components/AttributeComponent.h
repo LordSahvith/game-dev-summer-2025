@@ -28,4 +28,5 @@ class ULT_GAME_DEV_RPG_API UAttributeComponent : public UActorComponent
   public:
     void RecieveDamage(float Damage);
     float GetHealthPercent();
+    bool IsAlive();
 };

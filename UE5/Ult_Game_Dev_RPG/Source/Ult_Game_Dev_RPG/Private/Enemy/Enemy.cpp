@@ -63,7 +63,14 @@ void AEnemy::PlayMontageHitReact(const FName& AttackName)
 
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
-    DirectionalHitReact(ImpactPoint);
+    if (Attributes && Attributes->IsAlive())
+    {
+        DirectionalHitReact(ImpactPoint);
+    }
+    else if (Attributes && !Attributes->IsAlive())
+    {
+        Die();
+    }
 
     if (HitSound)
     {
@@ -131,4 +138,19 @@ float AEnemy::TakeDamage(float DamageAmount,
     }
 
     return DamageAmount;
+}
+
+void AEnemy::Die()
+{
+    // TODO: play death montage
+    if (AnimInstance && DeathMontage)
+    {
+        const int32 NumberOfAnimations = 6;
+        const int32 Selection = FMath::RandRange(1, NumberOfAnimations);
+        FString AttackName("Death");
+        AttackName.AppendInt(Selection);
+
+        AnimInstance->Montage_Play(DeathMontage);
+        AnimInstance->Montage_JumpToSection(FName(AttackName), DeathMontage);
+    }
 }
