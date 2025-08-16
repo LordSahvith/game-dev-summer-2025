@@ -20,8 +20,12 @@ class ULT_GAME_DEV_RPG_API UAttributeComponent : public UActorComponent
 
   private:
     UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-    float Health; // current health
+    float Health = 100.f; // current health
 
     UPROPERTY(EditAnywhere, Category = "Actor Attributes")
-    float MaxHealth;
+    float MaxHealth = 100.f;
+
+  public:
+    void RecieveDamage(float Damage);
+    float GetHealthPercent();
 };

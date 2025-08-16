@@ -164,7 +164,7 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
     if (OverlappingWeapon)
     {
-        OverlappingWeapon->Equip(GetMesh(), EquippedSocket);
+        OverlappingWeapon->Equip(GetMesh(), EquippedSocket, this, this);
         CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
         OverlappingItem = nullptr;
         EquippedWeapon = OverlappingWeapon;

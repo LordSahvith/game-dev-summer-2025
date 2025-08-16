@@ -18,7 +18,7 @@ AEnemy::AEnemy()
 
     Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 
-    HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
+    HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar"));
     HealthBarWidget->SetupAttachment(GetRootComponent());
 }
 
@@ -27,6 +27,7 @@ void AEnemy::BeginPlay()
     Super::BeginPlay();
 
     AnimInstance = GetMesh()->GetAnimInstance();
+    HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -112,4 +113,18 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
     {
         PlayMontageHitReact(ReactFromBack);
     }
+}
+
+float AEnemy::TakeDamage(float DamageAmount,
+                         struct FDamageEvent const& DamageEvent,
+                         class AController* EventInstigator,
+                         AActor* DamageCauser)
+{
+    if (Attributes && HealthBarWidget)
+    {
+        Attributes->RecieveDamage(DamageAmount);
+        HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
+    }
+
+    return DamageAmount;
 }

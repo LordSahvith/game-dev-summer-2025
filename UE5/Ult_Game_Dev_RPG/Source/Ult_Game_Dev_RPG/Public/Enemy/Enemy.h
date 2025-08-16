@@ -8,7 +8,7 @@
 class UAnimMontage;
 class UParticleSystem;
 class UAttributeComponent;
-class UWidgetComponent;
+class UHealthBarComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -22,6 +22,11 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
     virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
+    virtual float TakeDamage(float DamageAmount,
+                             struct FDamageEvent const& DamageEvent,
+                             class AController* EventInstigator,
+                             AActor* DamageCauser) override;
+
   protected:
     virtual void BeginPlay() override;
 
@@ -32,7 +37,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     UAttributeComponent* Attributes;
 
     UPROPERTY(VisibleAnywhere)
-    UWidgetComponent* HealthBarWidget;
+    UHealthBarComponent* HealthBarWidget;
 
     /**
      * Animation Blueprint Notify Names
