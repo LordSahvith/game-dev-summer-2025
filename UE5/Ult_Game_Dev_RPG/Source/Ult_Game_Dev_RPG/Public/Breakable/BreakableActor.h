@@ -32,5 +32,10 @@ class ULT_GAME_DEV_RPG_API ABreakableActor : public AActor, public IHitInterface
     UGeometryCollectionComponent* GeometryCollection;
 
     UPROPERTY(EditAnywhere, Category = "Breakable Properties")
-    TSubclassOf<ATreasure> TreasureClass;
+    TArray<TSubclassOf<ATreasure>> TreasureClasses;
+
+    UPROPERTY(EditAnywhere, Category = "Treasure")
+    int32 TreasureSpawnAmount = 10;
+
+    bool bHasAlreadySpawnedTreasure = false;
 };

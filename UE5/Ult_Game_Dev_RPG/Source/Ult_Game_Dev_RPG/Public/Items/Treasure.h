@@ -25,4 +25,7 @@ class ULT_GAME_DEV_RPG_API ATreasure : public AItem
      */
     UPROPERTY(EditAnywhere, Category = "Sound Effects")
     USoundBase* PickupSound;
+
+    UPROPERTY(EditAnywhere, Category = "Treasure")
+    int32 Gold;
 };

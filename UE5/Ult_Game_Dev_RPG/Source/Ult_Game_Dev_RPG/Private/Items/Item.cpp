@@ -36,7 +36,7 @@ void AItem::Tick(float DeltaTime)
     if (ItemState == EItemState::EIS_Hovering)
     {
         AddActorWorldOffset(FVector(0.f, 0.f, TransformedSin()));
-        AddActorWorldRotation(FQuat(FRotator(0.f, 1.f, 0.f)));
+        AddActorWorldRotation(FQuat(FRotator(0.f, HoverSpinSpeed, 0.f)));
     }
 }
 

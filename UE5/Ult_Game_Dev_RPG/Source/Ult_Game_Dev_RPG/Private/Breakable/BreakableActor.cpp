@@ -31,10 +31,16 @@ void ABreakableActor::Tick(float DeltaTime)
 
 void ABreakableActor::GetHit_Implementation(const FVector& ImpactPoint)
 {
-    if (GetWorld() && TreasureClass)
+    // 1/10 times it won't spawn treasure
+    bool bShouldSpawnTreasure = FMath::RandRange(0, 10) == 10;
+    if (bShouldSpawnTreasure || bHasAlreadySpawnedTreasure) return;
+
+    if (GetWorld() && TreasureClasses.Num() > 0)
     {
+        int32 TreasureType = FMath::RandRange(0, TreasureClasses.Num() - 1);
         FVector Location = GetActorLocation();
         Location.Z += 75.f;
-        GetWorld()->SpawnActor<ATreasure>(TreasureClass, Location, GetActorRotation());
+        GetWorld()->SpawnActor<ATreasure>(TreasureClasses[TreasureType], Location, GetActorRotation());
+        bHasAlreadySpawnedTreasure = true;
     }
 }

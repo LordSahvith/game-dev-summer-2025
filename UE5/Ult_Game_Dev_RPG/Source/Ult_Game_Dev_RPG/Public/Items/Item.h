@@ -63,4 +63,7 @@ class ULT_GAME_DEV_RPG_API AItem : public AActor
   private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     float RunningTime = 0.f;
+
+    UPROPERTY(EditAnywhere)
+    float HoverSpinSpeed = 1.f;
 };
