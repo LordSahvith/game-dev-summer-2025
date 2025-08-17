@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
 #include "HUD/HealthBarComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -20,6 +21,11 @@ AEnemy::AEnemy()
 
     HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar"));
     HealthBarWidget->SetupAttachment(GetRootComponent());
+
+    GetCharacterMovement()->bOrientRotationToMovement = true;
+    bUseControllerRotationPitch = false;
+    bUseControllerRotationRoll = false;
+    bUseControllerRotationYaw = false;
 }
 
 void AEnemy::BeginPlay()
