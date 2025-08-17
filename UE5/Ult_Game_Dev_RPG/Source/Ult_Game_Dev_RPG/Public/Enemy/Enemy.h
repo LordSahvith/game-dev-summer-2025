@@ -84,4 +84,10 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     void DirectionalHitReact(const FVector& ImpactPoint);
 
     EDeathPose GetDeathPose(int32 PoseType);
+
+    UPROPERTY()
+    AActor* CombatTarget;
+
+    UPROPERTY(EditAnywhere)
+    double CombatRadius = 500.f;
 };
