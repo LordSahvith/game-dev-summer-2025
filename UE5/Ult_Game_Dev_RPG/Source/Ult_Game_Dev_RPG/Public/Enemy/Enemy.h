@@ -10,6 +10,7 @@ class UAnimMontage;
 class UParticleSystem;
 class UAttributeComponent;
 class UHealthBarComponent;
+class AAIController;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -90,4 +91,18 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
     UPROPERTY(EditAnywhere)
     double CombatRadius = 500.f;
+
+    /**
+     * Navigation
+     */
+
+    UPROPERTY()
+    AAIController* EnemyController;
+
+    // Current Target
+    UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+    AActor* PatrolTarget;
+
+    UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
+    TArray<AActor*> PatrolPoints;
 };
