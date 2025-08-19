@@ -9,10 +9,6 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-/******************
- * MAIN INHERITED *
- ******************/
-
 AEnemy::AEnemy()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -38,6 +34,10 @@ AEnemy::AEnemy()
     PawnSensing->SightRadius = 4000.f;
     PawnSensing->SetPeripheralVisionAngle(45.f);
 }
+
+/*****************************************
+ * INHERITED OVERRIDES OF BASIC GAMEPLAY *
+ *****************************************/
 
 void AEnemy::BeginPlay()
 {

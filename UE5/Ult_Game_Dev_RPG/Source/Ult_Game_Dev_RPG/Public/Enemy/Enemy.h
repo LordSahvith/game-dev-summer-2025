@@ -1,8 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Interfaces/HitInterface.h"
+#include "Characters/BaseCharacter.h"
 #include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
@@ -14,7 +13,7 @@ class AAIController;
 class UPawnSensingComponent;
 
 UCLASS()
-class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
+class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 {
     GENERATED_BODY()
 

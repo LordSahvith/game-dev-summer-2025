@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "InputActionValue.h"
 #include "CharacterTypes.h"
 #include "MainCharacter.generated.h"
@@ -17,30 +17,31 @@ class UAnimMontage;
 class AWeapon;
 
 UCLASS()
-class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
+class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
 {
     GENERATED_BODY()
 
   public:
     AMainCharacter();
+
+    /*****************************************
+     * INHERITED OVERRIDES OF BASIC GAMEPLAY *
+     *****************************************/
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
-    UFUNCTION(BlueprintCallable)
-    void SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled);
 
   protected:
     virtual void BeginPlay() override;
 
-    /**
-     * Input Actions
-     */
+    /*****************
+     * INPUT ACTIONS *
+     *****************/
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* CharacterMappingContext;
 
-    /**
-     * Helpers for Animation Blueprint Notifiers
-     */
+    /*********************************
+     * ANIMATION BLUEPRINT NOTIFIERS *
+     *********************************/
     UFUNCTION(BlueprintCallable)
     void AttackEnd();
 
@@ -53,9 +54,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UFUNCTION(BlueprintCallable)
     void DrawWeapon();
 
-    /**
-     * Misc.
-     */
+    /***********
+     * HELPERS *
+     **********/
     UFUNCTION(BlueprintCallable)
     bool CanAttack();
 
@@ -63,9 +64,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     bool CanDrawWeapon();
 
   private:
-    /**
-     * States
-     */
+    /**********
+     * STATES *
+     **********/
     ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
     UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -73,9 +74,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
 
     UAnimInstance* AnimInstance;
 
-    /**
-     * Scenes
-     */
+    /**********
+     * SCENES *
+     **********/
     UPROPERTY(VisibleAnywhere)
     USpringArmComponent* SpringArm;
 
@@ -88,10 +89,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(VisibleAnywhere, Category = "Hair")
     UGroomComponent* Eyebrows;
 
-    /**
-     * INPUT
-     */
-
+    /*********
+     * INPUT *
+     *********/
     UPROPERTY(EditAnywhere, Category = "Input")
     UInputAction* MoveAction;
 
@@ -104,45 +104,43 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, Category = "Input")
     UInputAction* EquipAction;
 
-    /**
-     * Callbacks for Input
-     */
+    /***********************
+     * CALLBACKS FOR INPUT *
+     ***********************/
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
     virtual void Jump() override;
     void Equip(const FInputActionValue& Value);
-    void AttackBasic(const FInputActionValue& Value);
-    void AttackThreePartCombo(const FInputActionValue& Value);
-    void AttackCircle(const FInputActionValue& Value);
+    void AttackLight(const FInputActionValue& Value);
+    void AttackMedium(const FInputActionValue& Value);
     void AttackHeavy(const FInputActionValue& Value);
 
-    /**
-     * Attacks
-     */
+    /**********
+     * COMBAT *
+     **********/
+    virtual void Attack(const FName& AttackType) override;
+
+    /***********
+     * ATTACKS *
+     ***********/
     UPROPERTY(EditAnywhere, Category = "Input")
-    UInputAction* AttackBasicAction;
+    UInputAction* AttackLightAction;
 
     UPROPERTY(EditAnywhere, Category = "Input")
-    UInputAction* AttackThreePartComboAction;
-
-    UPROPERTY(EditAnywhere, Category = "Input")
-    UInputAction* AttackCircleAction;
+    UInputAction* AttackMediumAction;
 
     UPROPERTY(EditAnywhere, Category = "Input")
     UInputAction* AttackHeavyAction;
 
-    /**
-     * Weapon / Items
-     */
+    /******************
+     * WEAPON / ITEMS *
+     ******************/
     UPROPERTY(VisibleInstanceOnly)
     AItem* OverlappingItem;
 
-    UPROPERTY(VisibleAnywhere, Category = "Weapon")
-    AWeapon* EquippedWeapon;
-
-    /**
-     * Weapon Sockets Names
-     */
+    /***********************
+     * WEAPON SOCKET NAMES *
+     ***********************/
     UPROPERTY(EditAnywhere, Category = "Weapon")
     FName EquippedSocket = FName("RightHandSocket");
 
@@ -155,21 +153,16 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditAnywhere, Category = "Weapon")
     FName DrawWeaponName = FName("DrawWeapon");
 
-    /**
-     * Combat
-     */
-    void Attack(const FName& AttackType);
-
-    /**
-     * Animation Blueprint Notify Names
-     */
-    const FName BasicAttack = FName("BasicAttack");
-    const FName CircleAttack = FName("CircleAttack");
+    /************************************
+     * ANIMATION BLUEPRINT NOTIFY NAMES *
+     ************************************/
+    const FName LightAttack = FName("LightAttack");
+    const FName MediumAttack = FName("MediumAttack");
     const FName HeavyAttack = FName("HeavyAttack");
 
-    /**
-     * Animation Montages
-     */
+    /**********************
+     * ANIMATION MONTAGES *
+     **********************/
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* JumpMontage;
 
@@ -179,13 +172,16 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ACharacter
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* EquipMontage;
 
-    /**
-     * Play Montage Functions
-     */
+    /**************************
+     * PLAY MONTAGE FUNCTIONS *
+     **************************/
     void PlayMontageOneHandedAttack(const FName& AttackName);
     void PlayMontageEquip(const FName& SectionName);
 
   public:
+    /***********
+     * GETTERS *
+     ***********/
     FORCEINLINE void SetOverlappingItem(AItem* Item)
     {
         OverlappingItem = Item;

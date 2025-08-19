@@ -46,9 +46,9 @@ AMainCharacter::AMainCharacter()
     Eyebrows->AttachmentName = FString("head");
 }
 
-/**
- * Inherited Overrides of Basic Gameplay
- */
+/*****************************************
+ * INHERITED OVERRIDES OF BASIC GAMEPLAY *
+ *****************************************/
 
 void AMainCharacter::BeginPlay()
 {
@@ -73,9 +73,9 @@ void AMainCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-/**
- * Input
- */
+/*********
+ * INPUT *
+ *********/
 
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -88,11 +88,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMainCharacter::Jump);
         EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AMainCharacter::Equip);
         EnhancedInputComponent->BindAction(
-            AttackBasicAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackBasic);
+            AttackLightAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackLight);
         EnhancedInputComponent->BindAction(
-            AttackThreePartComboAction, ETriggerEvent::Completed, this, &AMainCharacter::AttackThreePartCombo);
-        EnhancedInputComponent->BindAction(
-            AttackCircleAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackCircle);
+            AttackMediumAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackMedium);
         EnhancedInputComponent->BindAction(
             AttackHeavyAction, ETriggerEvent::Triggered, this, &AMainCharacter::AttackHeavy);
     }
@@ -131,33 +129,6 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 void AMainCharacter::Jump()
 {
     Super::Jump();
-
-    // UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-
-    // // Which Type of Jump
-    // if (AnimInstance && JumpMontage && !GetCharacterMovement()->IsFalling())
-    // {
-    //     FString JumpType = "";
-
-    //     switch (CharacterState)
-    //     {
-    //         case ECharacterState::ECS_EquippedOneHandedWeapon:
-    //             JumpType = "EquippedOneHanded";
-    //             break;
-    //         case ECharacterState::ECS_EquippedTwoHandedWeapon:
-    //             JumpType = "EquippedTwoHanded";
-    //             break;
-    //         case ECharacterState::ECS_Unequipped:
-    //         default:
-    //             break;
-    //     }
-
-    //     FString JumpName = "Jump";
-    //     JumpName.Append(JumpType);
-
-    //     AnimInstance->Montage_Play(JumpMontage, 2.f);
-    //     AnimInstance->Montage_JumpToSection(FName(JumpName), JumpMontage);
-    // }
 }
 
 void AMainCharacter::Equip(const FInputActionValue& Value)
@@ -188,9 +159,9 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     }
 }
 
-/**
- * COMBAT ATTACKS
- */
+/******************
+ * COMBAT ATTACKS *
+ ******************/
 
 void AMainCharacter::Attack(const FName& AttackType)
 {
@@ -203,32 +174,23 @@ void AMainCharacter::Attack(const FName& AttackType)
     }
 }
 
-void AMainCharacter::AttackBasic(const FInputActionValue& Value)
+void AMainCharacter::AttackLight(const FInputActionValue& Value)
 {
 
     // ActionState gets reset from Animation Blueprint
     // calling: AMainCharacter::AttackEnd()
     if (CanAttack())
     {
-        Attack(BasicAttack);
+        Attack(LightAttack);
     }
 }
 
-void AMainCharacter::AttackThreePartCombo(const FInputActionValue& Value)
-{
-    if (GEngine)
-    {
-        FString Message = FString("Combo - Finished");
-        GEngine->AddOnScreenDebugMessage(1, 2.f, FColor::Cyan, Message);
-    }
-}
-
-void AMainCharacter::AttackCircle(const FInputActionValue& Value)
+void AMainCharacter::AttackMedium(const FInputActionValue& Value)
 {
 
     if (CanAttack())
     {
-        Attack(CircleAttack);
+        Attack(MediumAttack);
     }
 }
 
@@ -241,9 +203,9 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
     }
 }
 
-/**
- * COMBAT MONTAGES
- */
+/*******************
+ * COMBAT MONTAGES *
+ *******************/
 
 void AMainCharacter::PlayMontageOneHandedAttack(const FName& AttackName)
 {
@@ -263,9 +225,9 @@ void AMainCharacter::PlayMontageEquip(const FName& SectionName)
     }
 }
 
-/**
- * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS
- */
+/**************************************************
+ * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS *
+ **************************************************/
 
 void AMainCharacter::AttackEnd()
 {
@@ -293,18 +255,9 @@ void AMainCharacter::DrawWeapon()
     }
 }
 
-void AMainCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled)
-{
-    if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
-    {
-        EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
-        EquippedWeapon->IgnoreActors.Empty();
-    }
-}
-
-/**
- * COMBAT HELPERS - INTERNAL
- */
+/*****************************
+ * COMBAT HELPERS - INTERNAL *
+ *****************************/
 
 bool AMainCharacter::CanAttack()
 {
