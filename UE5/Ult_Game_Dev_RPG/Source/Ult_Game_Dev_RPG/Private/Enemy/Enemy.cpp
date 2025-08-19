@@ -10,6 +10,10 @@
 
 #include "Ult_Game_Dev_RPG/DebugMacros.h"
 
+/******************
+ * MAIN INHERITED *
+ ******************/
+
 AEnemy::AEnemy()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -46,70 +50,15 @@ void AEnemy::BeginPlay()
 
     EnemyController = Cast<AAIController>(GetController());
 
-    if (EnemyController && PatrolTarget)
-    {
-        FAIMoveRequest MoveRequest;
-        MoveRequest.SetGoalActor(PatrolTarget);
-        MoveRequest.SetAcceptanceRadius(15.f);
-
-        FNavPathSharedPtr NavPath;
-
-        EnemyController->MoveTo(MoveRequest, &NavPath);
-
-        TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-
-        for (auto& Point : PathPoints)
-        {
-            const FVector& Location = Point.Location;
-            DrawDebugSphere(GetWorld(), Location, 12.f, 12, FColor::Green, false, 10.f);
-        }
-    }
+    MoveToTarget(PatrolTarget);
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (CombatTarget)
-    {
-        if (!InTargetRange(CombatTarget, CombatRadius))
-        {
-            CombatTarget = nullptr;
-
-            if (HealthBarWidget)
-            {
-                HealthBarWidget->SetVisibility(false);
-            }
-        }
-    }
-
-    if (EnemyController && PatrolTarget)
-    {
-        if (InTargetRange(PatrolTarget, PatrolRadius))
-        {
-            TArray<AActor*> ValidTargets;
-            for (AActor* Target : PatrolTargets)
-            {
-                if (Target != PatrolTarget)
-                {
-                    ValidTargets.AddUnique(Target);
-                }
-            }
-
-            const int32 PatrolTargetCount = ValidTargets.Num();
-            if (PatrolTargetCount > 0)
-            {
-                const int32 TargetSelection = FMath::RandRange(0, PatrolTargetCount - 1);
-                PatrolTarget = ValidTargets[TargetSelection];
-
-                FAIMoveRequest MoveRequest;
-                MoveRequest.SetGoalActor(PatrolTarget);
-                MoveRequest.SetAcceptanceRadius(15.f);
-
-                EnemyController->MoveTo(MoveRequest);
-            }
-        }
-    }
+    CheckCombatTarget();
+    CheckPatrolTarget();
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -117,9 +66,9 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-/**
- * COMBAT MONTAGES
- */
+/*******************
+ * COMBAT MONTAGES *
+ *******************/
 
 void AEnemy::PlayMontageHitReact(const FName& AttackName)
 {
@@ -130,10 +79,11 @@ void AEnemy::PlayMontageHitReact(const FName& AttackName)
     }
 }
 
-/**
- * INTERFACES
- */
+/******************
+ * DAMAGE / DEATH *
+ ******************/
 
+// Interface
 void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
     if (Attributes && Attributes->IsAlive())
@@ -158,49 +108,6 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
     if (HealthBarWidget)
     {
         HealthBarWidget->SetVisibility(true);
-    }
-}
-
-/**
- * HELPERS
- */
-
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
-{
-    const FVector Forward = GetActorForwardVector();
-    const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-    const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
-
-    // Forward * ToHit = cos(theta)
-    const double CosTheta = FVector::DotProduct(Forward, ToHit);
-
-    // Take the inverse cosine (arc-cosine) of cos(theta) to get theta
-    // and convert from radians to degrees
-    double Theta = FMath::RadiansToDegrees(FMath::Acos(CosTheta));
-
-    // if cross product points down, Theta should be negative
-    const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-
-    if (CrossProduct.Z < 0)
-    {
-        Theta *= -1.f;
-    }
-
-    if (Theta >= -45.f && Theta < 45.f)
-    {
-        PlayMontageHitReact(ReactFromFront);
-    }
-    else if (Theta >= -135.f && Theta < -45.f)
-    {
-        PlayMontageHitReact(ReactFromLeft);
-    }
-    else if (Theta >= 45.f && Theta < 135.f)
-    {
-        PlayMontageHitReact(ReactFromRight);
-    }
-    else
-    {
-        PlayMontageHitReact(ReactFromBack);
     }
 }
 
@@ -243,6 +150,45 @@ void AEnemy::Die()
     }
 }
 
+void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
+{
+    const FVector Forward = GetActorForwardVector();
+    const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
+    const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
+
+    // Forward * ToHit = cos(theta)
+    const double CosTheta = FVector::DotProduct(Forward, ToHit);
+
+    // Take the inverse cosine (arc-cosine) of cos(theta) to get theta
+    // and convert from radians to degrees
+    double Theta = FMath::RadiansToDegrees(FMath::Acos(CosTheta));
+
+    // if cross product points down, Theta should be negative
+    const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
+
+    if (CrossProduct.Z < 0)
+    {
+        Theta *= -1.f;
+    }
+
+    if (Theta >= -45.f && Theta < 45.f)
+    {
+        PlayMontageHitReact(ReactFromFront);
+    }
+    else if (Theta >= -135.f && Theta < -45.f)
+    {
+        PlayMontageHitReact(ReactFromLeft);
+    }
+    else if (Theta >= 45.f && Theta < 135.f)
+    {
+        PlayMontageHitReact(ReactFromRight);
+    }
+    else
+    {
+        PlayMontageHitReact(ReactFromBack);
+    }
+}
+
 EDeathPose AEnemy::GetDeathPose(int32 PoseType)
 {
     EDeathPose Pose;
@@ -275,10 +221,80 @@ EDeathPose AEnemy::GetDeathPose(int32 PoseType)
     return Pose;
 }
 
+/***************************
+ * PATROLLING / NAVIGATION *
+ ***************************/
+
+void AEnemy::PatrolTimerFinished()
+{
+    MoveToTarget(PatrolTarget);
+}
+
+AActor* AEnemy::ChoosePatrolTarget()
+{
+    TArray<AActor*> ValidTargets;
+    for (AActor* Target : PatrolTargets)
+    {
+        if (Target != PatrolTarget)
+        {
+            ValidTargets.AddUnique(Target);
+        }
+    }
+
+    const int32 PatrolTargetCount = ValidTargets.Num();
+    if (PatrolTargetCount > 0)
+    {
+        const int32 TargetSelection = FMath::RandRange(0, PatrolTargetCount - 1);
+        return ValidTargets[TargetSelection];
+    }
+
+    return nullptr;
+}
+
+void AEnemy::MoveToTarget(AActor* Target)
+{
+    if (EnemyController == nullptr || Target == nullptr) return;
+
+    FAIMoveRequest MoveRequest;
+    MoveRequest.SetGoalActor(Target);
+    MoveRequest.SetAcceptanceRadius(15.f);
+
+    EnemyController->MoveTo(MoveRequest);
+}
+
+/***********
+ * HELPERS *
+ ***********/
+
 bool AEnemy::InTargetRange(AActor* Target, double Radius)
 {
+    if (Target == nullptr) return false;
+
     const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
     DRAW_SPHERE_Singleframe(GetActorLocation());
     DRAW_SPHERE_Singleframe(Target->GetActorLocation());
     return DistanceToTarget <= Radius;
+}
+
+void AEnemy::CheckCombatTarget()
+{
+    if (!InTargetRange(CombatTarget, CombatRadius))
+    {
+        CombatTarget = nullptr;
+
+        if (HealthBarWidget)
+        {
+            HealthBarWidget->SetVisibility(false);
+        }
+    }
+}
+
+void AEnemy::CheckPatrolTarget()
+{
+    if (InTargetRange(PatrolTarget, PatrolRadius))
+    {
+        PatrolTarget = ChoosePatrolTarget();
+        const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
+        GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
+    }
 }

@@ -22,6 +22,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    // Interface
     virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
     virtual float TakeDamage(float DamageAmount,
@@ -33,6 +34,8 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     virtual void BeginPlay() override;
     void Die();
     bool InTargetRange(AActor* Target, double Radius);
+    void MoveToTarget(AActor* Target);
+    AActor* ChoosePatrolTarget();
 
     UPROPERTY(BlueprintReadOnly)
     EDeathPose DeathPose = EDeathPose::EDP_Alive;
@@ -46,43 +49,43 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     UPROPERTY(VisibleAnywhere)
     UHealthBarComponent* HealthBarWidget;
 
-    /**
-     * Animation Blueprint Notify Names
-     */
+    /************************************
+     * ANIMATION BLUEPRINT NOTIFY NAMES *
+     ************************************/
     const FName ReactFromBack = FName("FromBack");
     const FName ReactFromFront = FName("FromFront");
     const FName ReactFromLeft = FName("FromLeft");
     const FName ReactFromRight = FName("FromRight");
 
-    /**
-     * Animation Montages
-     */
+    /*********************
+     * ANIMATIN MONTAGES *
+     *********************/
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* HitReactMontage;
 
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* DeathMontage;
 
-    /**
-     * Play Montage Functions
-     */
+    /**************************
+     * PLAY MONTAGE FUNCTIONS *
+     **************************/
     void PlayMontageHitReact(const FName& AttackName);
 
-    /**
-     * Sound Effects
-     */
+    /*****************
+     * SOUND EFFECTS *
+     *****************/
     UPROPERTY(EditAnywhere, Category = "Sound Effects")
     USoundBase* HitSound;
 
-    /**
-     * Visual Effects
-     */
+    /******************
+     * VISUAL EFFECTS *
+     ******************/
     UPROPERTY(EditAnywhere, Category = "Visual Effects")
     UParticleSystem* HitParticles;
 
-    /**
-     * Helpers
-     */
+    /******************
+     * DAMAGE / DEATH *
+     ******************/
     void DirectionalHitReact(const FVector& ImpactPoint);
 
     EDeathPose GetDeathPose(int32 PoseType);
@@ -93,10 +96,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     UPROPERTY(EditAnywhere)
     double CombatRadius = 500.f;
 
-    /**
-     * Navigation
-     */
-
+    /***************************
+     * PATROLLING / NAVIGATION *
+     ***************************/
     UPROPERTY()
     AAIController* EnemyController;
 
@@ -109,4 +111,19 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
     UPROPERTY(EditAnywhere)
     double PatrolRadius = 200.f;
+
+    FTimerHandle PatrolTimer;
+    void PatrolTimerFinished();
+
+    UPROPERTY(EditAnywhere, Category = "AI Navigation")
+    float WaitMin = 5.f;
+
+    UPROPERTY(EditAnywhere, Category = "AI Navigation")
+    float WaitMax = 10.f;
+
+    /***********
+     * HELPERS *
+     ***********/
+    void CheckCombatTarget();
+    void CheckPatrolTarget();
 };
