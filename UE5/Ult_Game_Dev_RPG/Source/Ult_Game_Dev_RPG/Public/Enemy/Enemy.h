@@ -110,6 +110,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     UPROPERTY(EditAnywhere)
     double CombatRadius = 500.f;
 
+    UPROPERTY(EditAnywhere)
+    double AttackRadius = 150.f;
+
     /***************************
      * PATROLLING / NAVIGATION *
      ***************************/

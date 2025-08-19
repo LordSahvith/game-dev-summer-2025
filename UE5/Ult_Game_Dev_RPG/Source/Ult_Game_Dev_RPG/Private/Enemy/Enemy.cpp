@@ -284,11 +284,15 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
 
     if (SeenPawn->ActorHasTag(FName("MainCharacter")))
     {
-        EnemyState = EEnemyState::EES_Chasing;
         GetWorldTimerManager().ClearTimer(PatrolTimer);
         GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxRunSpeed();
         CombatTarget = SeenPawn;
-        MoveToTarget(CombatTarget);
+
+        if (EnemyState != EEnemyState::EES_Attacking)
+        {
+            EnemyState = EEnemyState::EES_Chasing;
+            MoveToTarget(CombatTarget);
+        }
     }
 }
 
@@ -308,8 +312,9 @@ bool AEnemy::InTargetRange(AActor* Target, double Radius)
 
 void AEnemy::CheckCombatTarget()
 {
-    if (!InTargetRange(CombatTarget, CombatRadius))
+    if (!InTargetRange(CombatTarget, CombatRadius) && EnemyState != EEnemyState::EES_Patrolling)
     {
+        // outside combat radius, lose interest
         CombatTarget = nullptr;
 
         if (HealthBarWidget)
@@ -320,6 +325,19 @@ void AEnemy::CheckCombatTarget()
         EnemyState = EEnemyState::EES_Patrolling;
         GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxWalkSpeed();
         MoveToTarget(PatrolTarget);
+    }
+    else if (!InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Chasing)
+    {
+        // outside attack range, chase character
+        EnemyState = EEnemyState::EES_Chasing;
+        GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxRunSpeed();
+        MoveToTarget(CombatTarget);
+    }
+    else if (InTargetRange(CombatTarget, AttackRadius) && EnemyState != EEnemyState::EES_Attacking)
+    {
+        // inside attack range, attack player
+        EnemyState = EEnemyState::EES_Attacking;
+        // TODO: attack montage
     }
 }
 
