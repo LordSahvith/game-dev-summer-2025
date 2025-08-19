@@ -11,6 +11,7 @@ class UParticleSystem;
 class UAttributeComponent;
 class UHealthBarComponent;
 class AAIController;
+class UPawnSensingComponent;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
@@ -37,17 +38,26 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     void MoveToTarget(AActor* Target);
     AActor* ChoosePatrolTarget();
 
+    UFUNCTION()
+    void PawnSeen(APawn* SeenPawn);
+
     UPROPERTY(BlueprintReadOnly)
     EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
   private:
     UAnimInstance* AnimInstance;
 
+    /**************
+     * COMPONENTS *
+     **************/
     UPROPERTY(VisibleAnywhere)
     UAttributeComponent* Attributes;
 
     UPROPERTY(VisibleAnywhere)
     UHealthBarComponent* HealthBarWidget;
+
+    UPROPERTY(VisibleAnywhere)
+    UPawnSensingComponent* PawnSensing;
 
     /************************************
      * ANIMATION BLUEPRINT NOTIFY NAMES *
@@ -57,9 +67,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     const FName ReactFromLeft = FName("FromLeft");
     const FName ReactFromRight = FName("FromRight");
 
-    /*********************
-     * ANIMATIN MONTAGES *
-     *********************/
+    /**********************
+     * ANIMATION MONTAGES *
+     **********************/
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* HitReactMontage;
 

@@ -1,12 +1,13 @@
 #include "Enemy/Enemy.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Components/AttributeComponent.h"
-#include "HUD/HealthBarComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "AIController.h"
+#include "HUD/HealthBarComponent.h"
+#include "Components/AttributeComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "Perception/PawnSensingComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Ult_Game_Dev_RPG/DebugMacros.h"
 
@@ -34,6 +35,10 @@ AEnemy::AEnemy()
     bUseControllerRotationPitch = false;
     bUseControllerRotationRoll = false;
     bUseControllerRotationYaw = false;
+
+    PawnSensing = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
+    PawnSensing->SightRadius = 4000.f;
+    PawnSensing->SetPeripheralVisionAngle(45.f);
 }
 
 void AEnemy::BeginPlay()
@@ -51,6 +56,11 @@ void AEnemy::BeginPlay()
     EnemyController = Cast<AAIController>(GetController());
 
     MoveToTarget(PatrolTarget);
+
+    if (PawnSensing)
+    {
+        PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+    }
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -260,6 +270,11 @@ void AEnemy::MoveToTarget(AActor* Target)
     MoveRequest.SetAcceptanceRadius(15.f);
 
     EnemyController->MoveTo(MoveRequest);
+}
+
+void AEnemy::PawnSeen(APawn* SeenPawn)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
 }
 
 /***********
