@@ -9,8 +9,6 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "Ult_Game_Dev_RPG/DebugMacros.h"
-
 /******************
  * MAIN INHERITED *
  ******************/
@@ -139,6 +137,9 @@ float AEnemy::TakeDamage(float DamageAmount,
     }
 
     CombatTarget = EventInstigator->GetPawn();
+    EnemyState = EEnemyState::EES_Chasing;
+    GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxRunSpeed();
+    MoveToTarget(CombatTarget);
 
     return DamageAmount;
 }
@@ -273,7 +274,7 @@ void AEnemy::MoveToTarget(AActor* Target)
 
     FAIMoveRequest MoveRequest;
     MoveRequest.SetGoalActor(Target);
-    MoveRequest.SetAcceptanceRadius(15.f);
+    MoveRequest.SetAcceptanceRadius(75.f);
 
     EnemyController->MoveTo(MoveRequest);
 }
@@ -305,8 +306,6 @@ bool AEnemy::InTargetRange(AActor* Target, double Radius)
     if (Target == nullptr) return false;
 
     const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
-    DRAW_SPHERE_Singleframe(GetActorLocation());
-    DRAW_SPHERE_Singleframe(Target->GetActorLocation());
     return DistanceToTarget <= Radius;
 }
 
