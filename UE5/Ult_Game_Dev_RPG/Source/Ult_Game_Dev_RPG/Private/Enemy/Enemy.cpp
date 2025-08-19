@@ -316,6 +316,10 @@ void AEnemy::CheckCombatTarget()
         {
             HealthBarWidget->SetVisibility(false);
         }
+
+        EnemyState = EEnemyState::EES_Patrolling;
+        GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxWalkSpeed();
+        MoveToTarget(PatrolTarget);
     }
 }
 
