@@ -17,17 +17,35 @@ void UAttributeComponent::TickComponent(float DeltaTime,
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+/******************
+ * DAMAGE / DEATH *
+ ******************/
+
 void UAttributeComponent::RecieveDamage(float Damage)
 {
     Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
 }
+
+bool UAttributeComponent::IsAlive()
+{
+    return Health > 0.f;
+}
+
+/***********
+ * GETTERS *
+ ***********/
 
 float UAttributeComponent::GetHealthPercent()
 {
     return Health / MaxHealth;
 }
 
-bool UAttributeComponent::IsAlive()
+float UAttributeComponent::GetMaxWalkSpeed()
 {
-    return Health > 0.f;
+    return MaxWalkSpeed;
+}
+
+float UAttributeComponent::GetMaxRunSpeed()
+{
+    return MaxRunSpeed;
 }

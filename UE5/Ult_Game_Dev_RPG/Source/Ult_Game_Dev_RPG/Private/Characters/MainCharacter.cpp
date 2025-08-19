@@ -64,6 +64,8 @@ void AMainCharacter::BeginPlay()
     }
 
     AnimInstance = GetMesh()->GetAnimInstance();
+
+    Tags.Add(FName("MainCharacter"));
 }
 
 void AMainCharacter::Tick(float DeltaTime)

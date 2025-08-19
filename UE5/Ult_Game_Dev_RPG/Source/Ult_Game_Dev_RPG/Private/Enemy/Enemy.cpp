@@ -67,8 +67,14 @@ void AEnemy::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    CheckCombatTarget();
-    CheckPatrolTarget();
+    if (EnemyState > EEnemyState::EES_Patrolling)
+    {
+        CheckCombatTarget();
+    }
+    else
+    {
+        CheckPatrolTarget();
+    }
 }
 
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -156,7 +162,7 @@ void AEnemy::Die()
         }
 
         GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-        SetLifeSpan(3.f);
+        SetLifeSpan(5.f);
     }
 }
 
@@ -274,7 +280,16 @@ void AEnemy::MoveToTarget(AActor* Target)
 
 void AEnemy::PawnSeen(APawn* SeenPawn)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Pawn Seen!"));
+    if (EnemyState == EEnemyState::EES_Chasing) return;
+
+    if (SeenPawn->ActorHasTag(FName("MainCharacter")))
+    {
+        EnemyState = EEnemyState::EES_Chasing;
+        GetWorldTimerManager().ClearTimer(PatrolTimer);
+        GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxRunSpeed();
+        CombatTarget = SeenPawn;
+        MoveToTarget(CombatTarget);
+    }
 }
 
 /***********

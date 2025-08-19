@@ -41,6 +41,9 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     UFUNCTION()
     void PawnSeen(APawn* SeenPawn);
 
+    /**********
+     * STATES *
+     **********/
     UPROPERTY(BlueprintReadOnly)
     EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
@@ -58,6 +61,12 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
 
     UPROPERTY(VisibleAnywhere)
     UPawnSensingComponent* PawnSensing;
+
+    /**********
+     * STATES *
+     **********/
+    EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+    EDeathPose GetDeathPose(int32 PoseType);
 
     /************************************
      * ANIMATION BLUEPRINT NOTIFY NAMES *
@@ -81,15 +90,12 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
      **************************/
     void PlayMontageHitReact(const FName& AttackName);
 
-    /*****************
-     * SOUND EFFECTS *
-     *****************/
+    /*************
+     * SFX / VSF *
+     *************/
     UPROPERTY(EditAnywhere, Category = "Sound Effects")
     USoundBase* HitSound;
 
-    /******************
-     * VISUAL EFFECTS *
-     ******************/
     UPROPERTY(EditAnywhere, Category = "Visual Effects")
     UParticleSystem* HitParticles;
 
@@ -97,8 +103,6 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
      * DAMAGE / DEATH *
      ******************/
     void DirectionalHitReact(const FVector& ImpactPoint);
-
-    EDeathPose GetDeathPose(int32 PoseType);
 
     UPROPERTY()
     AActor* CombatTarget;

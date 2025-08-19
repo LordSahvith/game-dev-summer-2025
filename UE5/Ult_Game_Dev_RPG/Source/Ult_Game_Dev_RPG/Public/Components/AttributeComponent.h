@@ -25,8 +25,23 @@ class ULT_GAME_DEV_RPG_API UAttributeComponent : public UActorComponent
     UPROPERTY(EditAnywhere, Category = "Actor Attributes")
     float MaxHealth = 100.f;
 
+    UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+    float MaxWalkSpeed = 125.f;
+
+    UPROPERTY(EditAnywhere, Category = "Actor Attributes")
+    float MaxRunSpeed = 300.f;
+
   public:
+    /******************
+     * DAMAGE / DEATH *
+     ******************/
     void RecieveDamage(float Damage);
-    float GetHealthPercent();
     bool IsAlive();
+
+    /***********
+     * GETTERS *
+     ***********/
+    float GetHealthPercent();
+    float GetMaxWalkSpeed();
+    float GetMaxRunSpeed();
 };
