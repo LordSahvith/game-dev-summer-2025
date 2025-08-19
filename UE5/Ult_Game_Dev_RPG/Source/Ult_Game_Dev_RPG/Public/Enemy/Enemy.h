@@ -32,6 +32,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
   protected:
     virtual void BeginPlay() override;
     void Die();
+    bool InTargetRange(AActor* Target, double Radius);
 
     UPROPERTY(BlueprintReadOnly)
     EDeathPose DeathPose = EDeathPose::EDP_Alive;
@@ -104,5 +105,8 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ACharacter, public IHitInterface
     AActor* PatrolTarget;
 
     UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
-    TArray<AActor*> PatrolPoints;
+    TArray<AActor*> PatrolTargets;
+
+    UPROPERTY(EditAnywhere)
+    double PatrolRadius = 200.f;
 };

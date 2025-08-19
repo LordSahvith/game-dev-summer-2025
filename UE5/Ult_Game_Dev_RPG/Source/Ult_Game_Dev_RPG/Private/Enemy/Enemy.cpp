@@ -8,6 +8,8 @@
 #include "AIController.h"
 #include "Navigation/PathFollowingComponent.h"
 
+#include "Ult_Game_Dev_RPG/DebugMacros.h"
+
 AEnemy::AEnemy()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -70,15 +72,41 @@ void AEnemy::Tick(float DeltaTime)
 
     if (CombatTarget)
     {
-        const double DistanceToTarget = (CombatTarget->GetActorLocation() - GetActorLocation()).Size();
-
-        if (DistanceToTarget > CombatRadius)
+        if (!InTargetRange(CombatTarget, CombatRadius))
         {
             CombatTarget = nullptr;
 
             if (HealthBarWidget)
             {
                 HealthBarWidget->SetVisibility(false);
+            }
+        }
+    }
+
+    if (EnemyController && PatrolTarget)
+    {
+        if (InTargetRange(PatrolTarget, PatrolRadius))
+        {
+            TArray<AActor*> ValidTargets;
+            for (AActor* Target : PatrolTargets)
+            {
+                if (Target != PatrolTarget)
+                {
+                    ValidTargets.AddUnique(Target);
+                }
+            }
+
+            const int32 PatrolTargetCount = ValidTargets.Num();
+            if (PatrolTargetCount > 0)
+            {
+                const int32 TargetSelection = FMath::RandRange(0, PatrolTargetCount - 1);
+                PatrolTarget = ValidTargets[TargetSelection];
+
+                FAIMoveRequest MoveRequest;
+                MoveRequest.SetGoalActor(PatrolTarget);
+                MoveRequest.SetAcceptanceRadius(15.f);
+
+                EnemyController->MoveTo(MoveRequest);
             }
         }
     }
@@ -245,4 +273,12 @@ EDeathPose AEnemy::GetDeathPose(int32 PoseType)
     }
 
     return Pose;
+}
+
+bool AEnemy::InTargetRange(AActor* Target, double Radius)
+{
+    const double DistanceToTarget = (Target->GetActorLocation() - GetActorLocation()).Size();
+    DRAW_SPHERE_Singleframe(GetActorLocation());
+    DRAW_SPHERE_Singleframe(Target->GetActorLocation());
+    return DistanceToTarget <= Radius;
 }
