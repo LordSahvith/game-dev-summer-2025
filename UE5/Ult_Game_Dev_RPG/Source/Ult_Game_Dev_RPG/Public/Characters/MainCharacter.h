@@ -147,13 +147,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     UPROPERTY(EditAnywhere, Category = "Weapon")
     FName DrawWeaponName = FName("DrawWeapon");
 
-    /************************************
-     * ANIMATION BLUEPRINT NOTIFY NAMES *
-     ************************************/
-    const FName LightAttack = FName("LightAttack");
-    const FName MediumAttack = FName("MediumAttack");
-    const FName HeavyAttack = FName("HeavyAttack");
-
     /**********************
      * ANIMATION MONTAGES *
      **********************/

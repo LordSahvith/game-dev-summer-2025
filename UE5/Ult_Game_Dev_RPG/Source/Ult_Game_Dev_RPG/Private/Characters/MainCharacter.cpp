@@ -163,6 +163,8 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
 void AMainCharacter::Attack(const FName& AttackType)
 {
+    Super::Attack(AttackType);
+
     switch (CharacterState)
     {
         case ECharacterState::ECS_EquippedOneHandedWeapon:
@@ -204,6 +206,8 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
 
 void AMainCharacter::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
 {
+    Super::PlayMontageAttack(AttackName, AnimMontage);
+
     if (AnimInstance && AnimMontage)
     {
         AnimInstance->Montage_Play(AnimMontage);

@@ -65,6 +65,13 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     UPROPERTY(EditAnywhere)
     TSubclassOf<AWeapon> WeaponClass;
 
+    virtual void Attack(const FName& AttackType) override;
+
+    /**************************
+     * PLAY MONTAGE FUNCTIONS *
+     **************************/
+    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
+
     /******************
      * DAMAGE / DEATH *
      ******************/

@@ -51,6 +51,13 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     virtual void Attack(const FName& AttackType);
     virtual bool CanAttack();
 
+    /************************************
+     * ANIMATION BLUEPRINT NOTIFY NAMES *
+     ************************************/
+    const FName LightAttack = FName("LightAttack");
+    const FName MediumAttack = FName("MediumAttack");
+    const FName HeavyAttack = FName("HeavyAttack");
+
     /******************
      * DAMAGE / DEATH *
      ******************/

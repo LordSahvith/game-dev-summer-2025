@@ -260,6 +260,32 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
     }
 }
 
+/**********
+ * COMBAT *
+ **********/
+
+void AEnemy::Attack(const FName& AttackType)
+{
+    Super::Attack(AttackType);
+
+    PlayMontageAttack(AttackType, AttackMontage);
+}
+
+/*******************
+ * COMBAT MONTAGES *
+ *******************/
+
+void AEnemy::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
+{
+    Super::PlayMontageAttack(AttackName, AnimMontage);
+
+    if (AnimInstance && AnimMontage)
+    {
+        AnimInstance->Montage_Play(AnimMontage);
+        AnimInstance->Montage_JumpToSection(AttackName, AnimMontage);
+    }
+}
+
 /***********
  * HELPERS *
  ***********/
@@ -299,7 +325,20 @@ void AEnemy::CheckCombatTarget()
     {
         // inside attack range, attack player
         EnemyState = EEnemyState::EES_Attacking;
-        // TODO: attack montage
+
+        int32 Selection = FMath::RandRange(0, 2);
+        switch (Selection)
+        {
+            case 0:
+                Attack(LightAttack);
+                break;
+            case 1:
+                Attack(MediumAttack);
+                break;
+            case 2:
+                Attack(HeavyAttack);
+                break;
+        }
     }
 }
 

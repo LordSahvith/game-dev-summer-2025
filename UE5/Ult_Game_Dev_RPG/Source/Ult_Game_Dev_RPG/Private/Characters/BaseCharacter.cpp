@@ -16,6 +16,7 @@ ABaseCharacter::ABaseCharacter()
 /*****************************************
  * INHERITED OVERRIDES OF BASIC GAMEPLAY *
  *****************************************/
+
 void ABaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -37,17 +38,13 @@ void ABaseCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type Collisio
     }
 }
 
-/********************
- * COMBAT - ATTACKS *
- ********************/
+/***************************
+ * COMBAT - DAMAGE / DEATH *
+ ***************************/
 
 void ABaseCharacter::Attack(const FName& AttackType)
 {
 }
-
-/***************************
- * COMBAT - DAMAGE / DEATH *
- ***************************/
 
 void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint)
 {
