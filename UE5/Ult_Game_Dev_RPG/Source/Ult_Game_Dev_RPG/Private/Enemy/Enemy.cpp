@@ -1,13 +1,13 @@
 #include "Enemy/Enemy.h"
 #include "AIController.h"
 #include "HUD/HealthBarComponent.h"
-#include "Components/AttributeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/AttributeComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -19,8 +19,6 @@ AEnemy::AEnemy()
     GetMesh()->SetGenerateOverlapEvents(true);
 
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
-
-    Attributes = CreateDefaultSubobject<UAttributeComponent>(TEXT("Attributes"));
 
     HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar"));
     HealthBarWidget->SetupAttachment(GetRootComponent());
@@ -42,8 +40,6 @@ AEnemy::AEnemy()
 void AEnemy::BeginPlay()
 {
     Super::BeginPlay();
-
-    AnimInstance = GetMesh()->GetAnimInstance();
 
     if (HealthBarWidget)
     {
@@ -78,19 +74,6 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-/*******************
- * COMBAT MONTAGES *
- *******************/
-
-void AEnemy::PlayMontageHitReact(const FName& AttackName)
-{
-    if (AnimInstance && HitReactMontage)
-    {
-        AnimInstance->Montage_Play(HitReactMontage);
-        AnimInstance->Montage_JumpToSection(AttackName, HitReactMontage);
-    }
 }
 
 /******************
@@ -164,45 +147,6 @@ void AEnemy::Die()
 
         GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         SetLifeSpan(5.f);
-    }
-}
-
-void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
-{
-    const FVector Forward = GetActorForwardVector();
-    const FVector ImpactLowered(ImpactPoint.X, ImpactPoint.Y, GetActorLocation().Z);
-    const FVector ToHit = (ImpactLowered - GetActorLocation()).GetSafeNormal();
-
-    // Forward * ToHit = cos(theta)
-    const double CosTheta = FVector::DotProduct(Forward, ToHit);
-
-    // Take the inverse cosine (arc-cosine) of cos(theta) to get theta
-    // and convert from radians to degrees
-    double Theta = FMath::RadiansToDegrees(FMath::Acos(CosTheta));
-
-    // if cross product points down, Theta should be negative
-    const FVector CrossProduct = FVector::CrossProduct(Forward, ToHit);
-
-    if (CrossProduct.Z < 0)
-    {
-        Theta *= -1.f;
-    }
-
-    if (Theta >= -45.f && Theta < 45.f)
-    {
-        PlayMontageHitReact(ReactFromFront);
-    }
-    else if (Theta >= -135.f && Theta < -45.f)
-    {
-        PlayMontageHitReact(ReactFromLeft);
-    }
-    else if (Theta >= 45.f && Theta < 135.f)
-    {
-        PlayMontageHitReact(ReactFromRight);
-    }
-    else
-    {
-        PlayMontageHitReact(ReactFromBack);
     }
 }
 

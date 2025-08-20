@@ -14,7 +14,6 @@ class UCameraComponent;
 class UGroomComponent;
 class AItem;
 class UAnimMontage;
-class AWeapon;
 
 UCLASS()
 class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
@@ -30,6 +29,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+    // Interface
+    virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+
   protected:
     virtual void BeginPlay() override;
 
@@ -42,8 +44,7 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     /*********************************
      * ANIMATION BLUEPRINT NOTIFIERS *
      *********************************/
-    UFUNCTION(BlueprintCallable)
-    void AttackEnd();
+    virtual void AttackEnd() override;
 
     UFUNCTION(BlueprintCallable)
     void SheathEnd();
@@ -54,15 +55,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     UFUNCTION(BlueprintCallable)
     void DrawWeapon();
 
-    /***********
-     * HELPERS *
-     **********/
-    UFUNCTION(BlueprintCallable)
-    bool CanAttack();
-
-    bool CanSheathWeapon();
-    bool CanDrawWeapon();
-
   private:
     /**********
      * STATES *
@@ -71,8 +63,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
 
     UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
     EActionState ActionState = EActionState::EAS_Unoccupied;
-
-    UAnimInstance* AnimInstance;
 
     /**********
      * SCENES *
@@ -104,6 +94,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     UPROPERTY(EditAnywhere, Category = "Input")
     UInputAction* EquipAction;
 
+    bool CanSheathWeapon();
+    bool CanDrawWeapon();
+
     /***********************
      * CALLBACKS FOR INPUT *
      ***********************/
@@ -119,6 +112,7 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
      * COMBAT *
      **********/
     virtual void Attack(const FName& AttackType) override;
+    virtual bool CanAttack() override;
 
     /***********
      * ATTACKS *
@@ -164,18 +158,12 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
      * ANIMATION MONTAGES *
      **********************/
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* JumpMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* OneHandedAttackMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* EquipMontage;
 
     /**************************
      * PLAY MONTAGE FUNCTIONS *
      **************************/
-    void PlayMontageOneHandedAttack(const FName& AttackName);
+    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
     void PlayMontageEquip(const FName& SectionName);
 
   public:

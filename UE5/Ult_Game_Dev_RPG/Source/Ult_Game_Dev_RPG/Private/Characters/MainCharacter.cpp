@@ -2,7 +2,7 @@
 #include "Characters/MainCharacter.h"
 #include "Items/Item.h"
 #include "GroomComponent.h"
-#include "Animation/AnimMontage.h"
+#include "Components/AttributeComponent.h"
 
 // Input
 #include "Components/InputComponent.h"
@@ -62,8 +62,6 @@ void AMainCharacter::BeginPlay()
             Subsystem->AddMappingContext(CharacterMappingContext, 0);
         }
     }
-
-    AnimInstance = GetMesh()->GetAnimInstance();
 
     Tags.Add(FName("MainCharacter"));
 }
@@ -169,16 +167,13 @@ void AMainCharacter::Attack(const FName& AttackType)
     {
         case ECharacterState::ECS_EquippedOneHandedWeapon:
             ActionState = EActionState::EAS_Attacking;
-            PlayMontageOneHandedAttack(AttackType);
+            PlayMontageAttack(AttackType, AttackMontage);
             break;
     }
 }
 
 void AMainCharacter::AttackLight(const FInputActionValue& Value)
 {
-
-    // ActionState gets reset from Animation Blueprint
-    // calling: AMainCharacter::AttackEnd()
     if (CanAttack())
     {
         Attack(LightAttack);
@@ -207,12 +202,12 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
  * COMBAT MONTAGES *
  *******************/
 
-void AMainCharacter::PlayMontageOneHandedAttack(const FName& AttackName)
+void AMainCharacter::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
 {
-    if (AnimInstance && OneHandedAttackMontage)
+    if (AnimInstance && AnimMontage)
     {
-        AnimInstance->Montage_Play(OneHandedAttackMontage);
-        AnimInstance->Montage_JumpToSection(AttackName, OneHandedAttackMontage);
+        AnimInstance->Montage_Play(AnimMontage);
+        AnimInstance->Montage_JumpToSection(AttackName, AnimMontage);
     }
 }
 
@@ -261,6 +256,8 @@ void AMainCharacter::DrawWeapon()
 
 bool AMainCharacter::CanAttack()
 {
+    // ActionState gets reset from Animation Blueprint
+    // calling: AMainCharacter::AttackEnd()
     return ActionState == EActionState::EAS_Unoccupied;
 }
 
@@ -274,4 +271,36 @@ bool AMainCharacter::CanDrawWeapon()
 {
     return ActionState == EActionState::EAS_Unoccupied && CharacterState == ECharacterState::ECS_Unequipped &&
            EquippedWeapon;
+}
+
+/******************
+ * DAMAGE / DEATH *
+ ******************/
+
+// Interface
+void AMainCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+    // if (Attributes && Attributes->IsAlive())
+    // {
+    //     DirectionalHitReact(ImpactPoint);
+    // }
+    // else if (Attributes && !Attributes->IsAlive())
+    // {
+    //     Die();
+    // }
+
+    // if (HitSound)
+    // {
+    //     UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+    // }
+
+    // if (GetWorld() && HitParticles)
+    // {
+    //     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
+    // }
+
+    // if (HealthBarWidget)
+    // {
+    //     HealthBarWidget->SetVisibility(true);
+    // }
 }

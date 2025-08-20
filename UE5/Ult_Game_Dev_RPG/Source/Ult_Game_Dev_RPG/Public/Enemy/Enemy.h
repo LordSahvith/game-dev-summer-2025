@@ -5,9 +5,7 @@
 #include "Characters/CharacterTypes.h"
 #include "Enemy.generated.h"
 
-class UAnimMontage;
 class UParticleSystem;
-class UAttributeComponent;
 class UHealthBarComponent;
 class AAIController;
 class UPawnSensingComponent;
@@ -32,7 +30,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 
   protected:
     virtual void BeginPlay() override;
-    void Die();
+    virtual void Die() override;
     bool InTargetRange(AActor* Target, double Radius);
     void MoveToTarget(AActor* Target);
     AActor* ChoosePatrolTarget();
@@ -43,18 +41,11 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     /**********
      * STATES *
      **********/
-    UPROPERTY(BlueprintReadOnly)
-    EDeathPose DeathPose = EDeathPose::EDP_Alive;
 
   private:
-    UAnimInstance* AnimInstance;
-
     /**************
      * COMPONENTS *
      **************/
-    UPROPERTY(VisibleAnywhere)
-    UAttributeComponent* Attributes;
-
     UPROPERTY(VisibleAnywhere)
     UHealthBarComponent* HealthBarWidget;
 
@@ -64,45 +55,15 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     /**********
      * STATES *
      **********/
+    UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+    EDeathPose DeathPose = EDeathPose::EDP_Alive;
+
     EEnemyState EnemyState = EEnemyState::EES_Patrolling;
     EDeathPose GetDeathPose(int32 PoseType);
-
-    /************************************
-     * ANIMATION BLUEPRINT NOTIFY NAMES *
-     ************************************/
-    const FName ReactFromBack = FName("FromBack");
-    const FName ReactFromFront = FName("FromFront");
-    const FName ReactFromLeft = FName("FromLeft");
-    const FName ReactFromRight = FName("FromRight");
-
-    /**********************
-     * ANIMATION MONTAGES *
-     **********************/
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* HitReactMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* DeathMontage;
-
-    /**************************
-     * PLAY MONTAGE FUNCTIONS *
-     **************************/
-    void PlayMontageHitReact(const FName& AttackName);
-
-    /*************
-     * SFX / VSF *
-     *************/
-    UPROPERTY(EditAnywhere, Category = "Sound Effects")
-    USoundBase* HitSound;
-
-    UPROPERTY(EditAnywhere, Category = "Visual Effects")
-    UParticleSystem* HitParticles;
 
     /******************
      * DAMAGE / DEATH *
      ******************/
-    void DirectionalHitReact(const FVector& ImpactPoint);
-
     UPROPERTY()
     AActor* CombatTarget;
 
