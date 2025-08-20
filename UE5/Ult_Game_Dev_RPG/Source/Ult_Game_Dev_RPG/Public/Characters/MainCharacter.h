@@ -153,12 +153,6 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* EquipMontage;
 
-    /**************************
-     * PLAY MONTAGE FUNCTIONS *
-     **************************/
-    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
-    void PlayMontageEquip(const FName& SectionName);
-
   public:
     /***********
      * GETTERS *

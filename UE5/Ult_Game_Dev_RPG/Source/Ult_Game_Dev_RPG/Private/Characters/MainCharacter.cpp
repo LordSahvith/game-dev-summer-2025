@@ -9,7 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
-// Scenes
+// engine components
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -144,13 +144,13 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     {
         if (CanSheathWeapon())
         {
-            PlayMontageEquip(SheathWeaponName);
+            PlayMontageSection(SheathWeaponName, EquipMontage);
             CharacterState = ECharacterState::ECS_Unequipped;
             ActionState = EActionState::EAS_Sheathing;
         }
         else if (CanDrawWeapon())
         {
-            PlayMontageEquip(DrawWeaponName);
+            PlayMontageSection(DrawWeaponName, EquipMontage);
             CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
             ActionState = EActionState::EAS_Sheathing;
         }
@@ -163,13 +163,11 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
 void AMainCharacter::Attack(const FName& AttackType)
 {
-    Super::Attack(AttackType);
-
     switch (CharacterState)
     {
         case ECharacterState::ECS_EquippedOneHandedWeapon:
             ActionState = EActionState::EAS_Attacking;
-            PlayMontageAttack(AttackType, AttackMontage);
+            Super::Attack(AttackType);
             break;
     }
 }
@@ -197,30 +195,6 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
     if (CanAttack())
     {
         Attack(HeavyAttack);
-    }
-}
-
-/*******************
- * COMBAT MONTAGES *
- *******************/
-
-void AMainCharacter::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
-{
-    Super::PlayMontageAttack(AttackName, AnimMontage);
-
-    if (AnimInstance && AnimMontage)
-    {
-        AnimInstance->Montage_Play(AnimMontage);
-        AnimInstance->Montage_JumpToSection(AttackName, AnimMontage);
-    }
-}
-
-void AMainCharacter::PlayMontageEquip(const FName& SectionName)
-{
-    if (AnimInstance && EquipMontage)
-    {
-        AnimInstance->Montage_Play(EquipMontage);
-        AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
     }
 }
 
@@ -284,27 +258,4 @@ bool AMainCharacter::CanDrawWeapon()
 // Interface
 void AMainCharacter::GetHit_Implementation(const FVector& ImpactPoint)
 {
-    // if (Attributes && Attributes->IsAlive())
-    // {
-    //     DirectionalHitReact(ImpactPoint);
-    // }
-    // else if (Attributes && !Attributes->IsAlive())
-    // {
-    //     Die();
-    // }
-
-    // if (HitSound)
-    // {
-    //     UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
-    // }
-
-    // if (GetWorld() && HitParticles)
-    // {
-    //     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
-    // }
-
-    // if (HealthBarWidget)
-    // {
-    //     HealthBarWidget->SetVisibility(true);
-    // }
 }

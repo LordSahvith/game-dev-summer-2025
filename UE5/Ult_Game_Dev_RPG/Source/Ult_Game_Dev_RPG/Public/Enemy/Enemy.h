@@ -59,13 +59,10 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
-    EDeathPose GetDeathPose(int32 PoseType);
-
     /***************************
      * COMBAT - DAMAGE / DEATH *
      ***************************/
     virtual bool CanAttack() override;
-    virtual void Attack(const FName& AttackType) override;
     virtual void HandleDamage(float DamageAmount);
 
     UPROPERTY()
@@ -90,10 +87,8 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     UPROPERTY(EditAnywhere, Category = "Combat")
     float AttackMax = 1.f;
 
-    /*****************
-     * PLAY MONTAGES *
-     *****************/
-    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float DeathLifeSpan = 8.f;
 
     /***********************
      * WEAPON SOCKET NAMES *
@@ -119,12 +114,19 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 
     FTimerHandle PatrolTimer;
     void PatrolTimerFinished();
+    void StartPatrolTimer();
+    void ClearPatrolTimer();
 
     UPROPERTY(EditAnywhere, Category = "AI Navigation")
     float WaitMin = 5.f;
 
     UPROPERTY(EditAnywhere, Category = "AI Navigation")
     float WaitMax = 10.f;
+
+    /**********************
+     * ANIMATION MONTAGES *
+     **********************/
+    virtual int32 PlayMontageDeath() override;
 
     /***************
      * AI BEHAVIOR *
@@ -146,5 +148,4 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     bool IsEngaged();
     void CheckCombatTarget();
     void CheckPatrolTarget();
-    void ClearPatrolTimer();
 };

@@ -116,54 +116,12 @@ float AEnemy::TakeDamage(float DamageAmount,
 
 void AEnemy::Die()
 {
-    if (AnimInstance && DeathMontage)
-    {
-        const int32 NumberOfAnimations = 6;
-        const int32 Selection = FMath::RandRange(1, NumberOfAnimations);
-        FString AttackName("Death");
-        AttackName.AppendInt(Selection);
-
-        AnimInstance->Montage_Play(DeathMontage);
-        AnimInstance->Montage_JumpToSection(FName(AttackName), DeathMontage);
-        DeathPose = GetDeathPose(Selection);
-
-        if (HealthBarWidget)
-        {
-            HealthBarWidget->SetVisibility(false);
-        }
-
-        GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-        SetLifeSpan(5.f);
-    }
-}
-
-EDeathPose AEnemy::GetDeathPose(int32 PoseType)
-{
-    EDeathPose Pose = EDeathPose::EDP_Death1;
-
-    switch (PoseType)
-    {
-        case 1:
-            Pose = EDeathPose::EDP_Death1;
-            break;
-        case 2:
-            Pose = EDeathPose::EDP_Death2;
-            break;
-        case 3:
-            Pose = EDeathPose::EDP_Death3;
-            break;
-        case 4:
-            Pose = EDeathPose::EDP_Death4;
-            break;
-        case 5:
-            Pose = EDeathPose::EDP_Death5;
-            break;
-        case 6:
-            Pose = EDeathPose::EDP_Death6;
-            break;
-    }
-
-    return Pose;
+    EnemyState = EEnemyState::EES_Dead;
+    ClearAttackTimer();
+    HideHealthBar();
+    DisableCapsule();
+    SetLifeSpan(DeathLifeSpan);
+    PlayMontageDeath();
 }
 
 void AEnemy::Destroyed()
@@ -177,13 +135,6 @@ void AEnemy::Destroyed()
 bool AEnemy::CanAttack()
 {
     return IsInsideAttackRadius() && !IsAttacking() && !IsEngaged() && !IsDead();
-}
-
-void AEnemy::Attack(const FName& AttackType)
-{
-    Super::Attack(AttackType);
-
-    PlayMontageAttack(AttackType, AttackMontage);
 }
 
 void AEnemy::StartAttackTimer()
@@ -214,6 +165,17 @@ void AEnemy::HandleDamage(float DamageAmount)
 void AEnemy::PatrolTimerFinished()
 {
     MoveToTarget(PatrolTarget);
+}
+
+void AEnemy::StartPatrolTimer()
+{
+    const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
+    GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
+}
+
+void AEnemy::ClearPatrolTimer()
+{
+    GetWorldTimerManager().ClearTimer(PatrolTimer);
 }
 
 AActor* AEnemy::ChoosePatrolTarget()
@@ -261,18 +223,20 @@ void AEnemy::PawnSeen(APawn* SeenPawn)
     }
 }
 
-/*******************
- * COMBAT MONTAGES *
- *******************/
-void AEnemy::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
+/**********************
+ * ANIMATION MONTAGES *
+ **********************/
+int32 AEnemy::PlayMontageDeath()
 {
-    Super::PlayMontageAttack(AttackName, AnimMontage);
+    const int32 Selection = Super::PlayMontageDeath();
+    EDeathPose Pose = static_cast<EDeathPose>(Selection);
 
-    if (AnimInstance && AnimMontage)
+    if (Pose < EDeathPose::EDP_MAX)
     {
-        AnimInstance->Montage_Play(AnimMontage);
-        AnimInstance->Montage_JumpToSection(AttackName, AnimMontage);
+        DeathPose = Pose;
     }
+
+    return Selection;
 }
 
 /***************
@@ -319,20 +283,7 @@ void AEnemy::ChaseTarget()
 void AEnemy::AttackTarget()
 {
     EnemyState = EEnemyState::EES_Attacking;
-
-    int32 Selection = FMath::RandRange(0, 2);
-    switch (Selection)
-    {
-        case 0:
-            Attack(LightAttack);
-            break;
-        case 1:
-            Attack(MediumAttack);
-            break;
-        case 2:
-            Attack(HeavyAttack);
-            break;
-    }
+    PlayMontageAttack();
 }
 
 bool AEnemy::IsOutsideCombatRadius()
@@ -415,12 +366,6 @@ void AEnemy::CheckPatrolTarget()
     if (InTargetRange(PatrolTarget, PatrolRadius))
     {
         PatrolTarget = ChoosePatrolTarget();
-        const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
-        GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
+        StartPatrolTimer();
     }
-}
-
-void AEnemy::ClearPatrolTimer()
-{
-    GetWorldTimerManager().ClearTimer(PatrolTimer);
 }

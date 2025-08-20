@@ -2,6 +2,7 @@
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 
 // weapon
 #include "Items/Weapons/Weapon.h"
@@ -48,6 +49,10 @@ bool ABaseCharacter::CanAttack()
 
 void ABaseCharacter::Attack(const FName& AttackType)
 {
+    if (AttackMontage)
+    {
+        PlayMontageSection(AttackType, AttackMontage);
+    }
 }
 
 void ABaseCharacter::Die()
@@ -95,36 +100,53 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 
     if (Theta >= -45.f && Theta < 45.f)
     {
-        PlayMontageHitReact(ReactFromFront);
+        PlayMontageSection(ReactFromFront, HitReactMontage);
     }
     else if (Theta >= -135.f && Theta < -45.f)
     {
-        PlayMontageHitReact(ReactFromLeft);
+        PlayMontageSection(ReactFromLeft, HitReactMontage);
     }
     else if (Theta >= 45.f && Theta < 135.f)
     {
-        PlayMontageHitReact(ReactFromRight);
+        PlayMontageSection(ReactFromRight, HitReactMontage);
     }
     else
     {
-        PlayMontageHitReact(ReactFromBack);
+        PlayMontageSection(ReactFromBack, HitReactMontage);
     }
 }
 
 /*********************
  * COMBAT - MONTAGES *
  *********************/
-void ABaseCharacter::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
+void ABaseCharacter::PlayMontageSection(const FName& SectionName, UAnimMontage* AnimMontage)
 {
+    if (AnimInstance && AnimMontage)
+    {
+        AnimInstance->Montage_Play(AnimMontage);
+        AnimInstance->Montage_JumpToSection(SectionName, AnimMontage);
+    }
 }
 
-void ABaseCharacter::PlayMontageHitReact(const FName& AttackName)
+int32 ABaseCharacter::PlayMontageSectionRandom(UAnimMontage* AnimMontage, const TArray<FName>& SectionNames)
 {
-    if (AnimInstance && HitReactMontage)
-    {
-        AnimInstance->Montage_Play(HitReactMontage);
-        AnimInstance->Montage_JumpToSection(AttackName, HitReactMontage);
-    }
+    if (SectionNames.Num() <= 0) return -1;
+
+    int32 MaxSectionIndex = SectionNames.Num() - 1;
+    int32 Selection = FMath::RandRange(0, MaxSectionIndex);
+
+    PlayMontageSection(SectionNames[Selection], AnimMontage);
+    return Selection;
+}
+
+int32 ABaseCharacter::PlayMontageAttack()
+{
+    return PlayMontageSectionRandom(AttackMontage, AttackMontageSections);
+}
+
+int32 ABaseCharacter::PlayMontageDeath()
+{
+    return PlayMontageSectionRandom(DeathMontage, DeathMontageSections);
 }
 
 /**************************************************
@@ -137,6 +159,10 @@ void ABaseCharacter::AttackEnd()
 /*****************************
  * COMBAT HELPERS - INTERNAL *
  *****************************/
+void ABaseCharacter::DisableCapsule()
+{
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 
 /*************
  * SFX / VSF *

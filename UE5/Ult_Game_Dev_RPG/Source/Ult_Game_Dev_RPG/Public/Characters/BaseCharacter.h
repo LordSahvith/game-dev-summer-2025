@@ -59,6 +59,11 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     /**********************
      * ANIMATION MONTAGES *
      **********************/
+    void PlayMontageSection(const FName& SectionName, UAnimMontage* AnimMontage);
+    int32 PlayMontageSectionRandom(UAnimMontage* AnimMontage, const TArray<FName>& SectionNames);
+    virtual int32 PlayMontageAttack();
+    virtual int32 PlayMontageDeath();
+
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* AttackMontage;
 
@@ -68,11 +73,11 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     UPROPERTY(EditDefaultsOnly, Category = "Montages")
     UAnimMontage* DeathMontage;
 
-    /**************************
-     * PLAY MONTAGE FUNCTIONS *
-     **************************/
-    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage);
-    void PlayMontageHitReact(const FName& AttackName);
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    TArray<FName> AttackMontageSections;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    TArray<FName> DeathMontageSections;
 
     /*********************************
      * ANIMATION BLUEPRINT NOTIFIERS *
@@ -97,6 +102,11 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
      *************/
     void PlayHitSound(const FVector& ImpactPoint);
     void SpawnHitParticles(const FVector& ImpactPoint);
+
+    /*****************************
+     * COMBAT HELPERS - INTERNAL *
+     *****************************/
+    void DisableCapsule();
 
   private:
     /*************
