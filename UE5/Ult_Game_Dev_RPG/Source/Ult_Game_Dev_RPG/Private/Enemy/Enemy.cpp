@@ -218,7 +218,7 @@ void AEnemy::MoveToTarget(AActor* Target)
 
     FAIMoveRequest MoveRequest;
     MoveRequest.SetGoalActor(Target);
-    MoveRequest.SetAcceptanceRadius(75.f);
+    MoveRequest.SetAcceptanceRadius(50.f);
 
     EnemyController->MoveTo(MoveRequest);
 }
