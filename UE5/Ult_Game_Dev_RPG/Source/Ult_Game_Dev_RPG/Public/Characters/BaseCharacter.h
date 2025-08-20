@@ -24,9 +24,6 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     // Interface
     virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
-    UFUNCTION(BlueprintCallable)
-    void SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled);
-
   protected:
     virtual void BeginPlay() override;
 
@@ -35,6 +32,9 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     /******************
      * WEAPON / ITEMS *
      ******************/
+    UFUNCTION(BlueprintCallable)
+    void SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled);
+
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     AWeapon* EquippedWeapon;
 
@@ -63,21 +63,6 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     int32 PlayMontageSectionRandom(UAnimMontage* AnimMontage, const TArray<FName>& SectionNames);
     virtual int32 PlayMontageAttack();
     virtual int32 PlayMontageDeath();
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* AttackMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* HitReactMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
-    UAnimMontage* DeathMontage;
-
-    UPROPERTY(EditAnywhere, Category = "Combat")
-    TArray<FName> AttackMontageSections;
-
-    UPROPERTY(EditAnywhere, Category = "Combat")
-    TArray<FName> DeathMontageSections;
 
     /*********************************
      * ANIMATION BLUEPRINT NOTIFIERS *
@@ -109,6 +94,8 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     void DisableCapsule();
 
   private:
+    const FName EngageableTagName = FName("CombatAcceptable");
+
     /*************
      * SFX / VSF *
      *************/
@@ -118,7 +105,23 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     UPROPERTY(EditAnywhere, Category = "Visual Effects")
     UParticleSystem* HitParticles;
 
-    const FName EngageableTagName = FName("CombatAcceptable");
+    /**********************
+     * ANIMATION MONTAGES *
+     **********************/
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* AttackMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* HitReactMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UAnimMontage* DeathMontage;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    TArray<FName> AttackMontageSections;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    TArray<FName> DeathMontageSections;
 
   public:
     FORCEINLINE FName GetEngageableTagName()

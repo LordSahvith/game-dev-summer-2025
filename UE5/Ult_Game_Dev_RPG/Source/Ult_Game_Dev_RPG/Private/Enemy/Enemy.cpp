@@ -5,7 +5,6 @@
 #include "HUD/HealthBarComponent.h"
 
 // engine components
-#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -27,8 +26,6 @@ AEnemy::AEnemy()
     GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
     GetMesh()->SetGenerateOverlapEvents(true);
 
-    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
-
     HealthBarWidget = CreateDefaultSubobject<UHealthBarComponent>(TEXT("Health Bar"));
     HealthBarWidget->SetupAttachment(GetRootComponent());
 
@@ -49,29 +46,12 @@ void AEnemy::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (HealthBarWidget)
-    {
-        HealthBarWidget->SetHealthPercent(Attributes->GetHealthPercent());
-        HealthBarWidget->SetVisibility(false);
-    }
-
-    EnemyController = Cast<AAIController>(GetController());
-
-    MoveToTarget(PatrolTarget);
-
     if (PawnSensing)
     {
         PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
     }
 
-    UWorld* World = GetWorld();
-
-    if (World && WeaponClass)
-    {
-        AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
-        DefaultWeapon->Equip(GetMesh(), EquippedSocket, this, this);
-        EquippedWeapon = DefaultWeapon;
-    }
+    InitializeEnemy();
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -137,10 +117,16 @@ bool AEnemy::CanAttack()
     return IsInsideAttackRadius() && !IsAttacking() && !IsEngaged() && !IsDead();
 }
 
+void AEnemy::AttackTarget()
+{
+    EnemyState = EEnemyState::EES_Engaged;
+    PlayMontageAttack();
+}
+
 void AEnemy::StartAttackTimer()
 {
     EnemyState = EEnemyState::EES_Attacking;
-    const float AttackTime = FMath::RandRange(AttackMin, AttackMax);
+    const float AttackTime = FMath::RandRange(AttackWaitMin, AttackWaitMax);
     GetWorldTimerManager().SetTimer(AttackTimer, this, &AEnemy::AttackTarget, AttackTime);
 }
 
@@ -159,6 +145,16 @@ void AEnemy::HandleDamage(float DamageAmount)
     }
 }
 
+void AEnemy::SpawnDefaultWeapon()
+{
+    if (GetWorld() && WeaponClass)
+    {
+        AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+        DefaultWeapon->Equip(GetMesh(), EquippedSocket, this, this);
+        EquippedWeapon = DefaultWeapon;
+    }
+}
+
 /***************************
  * PATROLLING / NAVIGATION *
  ***************************/
@@ -169,7 +165,7 @@ void AEnemy::PatrolTimerFinished()
 
 void AEnemy::StartPatrolTimer()
 {
-    const float WaitTime = FMath::RandRange(WaitMin, WaitMax);
+    const float WaitTime = FMath::RandRange(PatrolWaitMin, PatrolWaitMax);
     GetWorldTimerManager().SetTimer(PatrolTimer, this, &AEnemy::PatrolTimerFinished, WaitTime);
 }
 
@@ -239,9 +235,26 @@ int32 AEnemy::PlayMontageDeath()
     return Selection;
 }
 
+/*********************************
+ * ANIMATION BLUEPRINT NOTIFIERS *
+ *********************************/
+void AEnemy::AttackEnd()
+{
+    EnemyState = EEnemyState::EES_NoState;
+    CheckCombatTarget();
+}
+
 /***************
  * AI BEHAVIOR *
  ***************/
+void AEnemy::InitializeEnemy()
+{
+    EnemyController = Cast<AAIController>(GetController());
+    MoveToTarget(PatrolTarget);
+    HideHealthBar();
+    SpawnDefaultWeapon();
+}
+
 void AEnemy::ToggleHealthBar(bool bShouldShow)
 {
     if (HealthBarWidget)
@@ -278,12 +291,6 @@ void AEnemy::ChaseTarget()
     EnemyState = EEnemyState::EES_Chasing;
     GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMaxRunSpeed();
     MoveToTarget(CombatTarget);
-}
-
-void AEnemy::AttackTarget()
-{
-    EnemyState = EEnemyState::EES_Attacking;
-    PlayMontageAttack();
 }
 
 bool AEnemy::IsOutsideCombatRadius()

@@ -22,18 +22,20 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
 
   public:
     AMainCharacter();
-
-    /*****************************************
-     * INHERITED OVERRIDES OF BASIC GAMEPLAY *
-     *****************************************/
-    virtual void Tick(float DeltaTime) override;
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
-    // Interface
+    /**
+     * @interface: IHitInterface
+     */
     virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
   protected:
     virtual void BeginPlay() override;
+
+    /*********************************
+     * ANIMATION BLUEPRINT NOTIFIERS *
+     *********************************/
+    virtual void AttackEnd() override;
 
     /*****************
      * INPUT ACTIONS *
@@ -41,19 +43,14 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext* CharacterMappingContext;
 
-    /*********************************
-     * ANIMATION BLUEPRINT NOTIFIERS *
-     *********************************/
-    virtual void AttackEnd() override;
-
     UFUNCTION(BlueprintCallable)
     void SheathEnd();
 
     UFUNCTION(BlueprintCallable)
-    void SheathWeapon();
+    void AttachWeaponToBack();
 
     UFUNCTION(BlueprintCallable)
-    void DrawWeapon();
+    void AttachWeaponToHand();
 
   private:
     /**********
@@ -113,6 +110,9 @@ class ULT_GAME_DEV_RPG_API AMainCharacter : public ABaseCharacter
      **********/
     virtual void Attack(const FName& AttackType) override;
     virtual bool CanAttack() override;
+    void EquipWeapon(AWeapon* Weapon);
+    void SheathWeapon();
+    void DrawWeapon();
 
     /***********
      * ATTACKS *

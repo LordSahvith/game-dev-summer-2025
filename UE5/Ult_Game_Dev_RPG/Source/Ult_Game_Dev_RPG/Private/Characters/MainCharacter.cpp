@@ -16,11 +16,10 @@
 
 // weapon
 #include "Items/Weapons/Weapon.h"
-#include "Components/BoxComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
     bUseControllerRotationPitch = false;
     bUseControllerRotationYaw = false;
@@ -49,7 +48,6 @@ AMainCharacter::AMainCharacter()
 /*****************************************
  * INHERITED OVERRIDES OF BASIC GAMEPLAY *
  *****************************************/
-
 void AMainCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -66,15 +64,9 @@ void AMainCharacter::BeginPlay()
     Tags.Add(GetEngageableTagName());
 }
 
-void AMainCharacter::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-}
-
 /*********
  * INPUT *
  *********/
-
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -135,24 +127,17 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 
     if (OverlappingWeapon)
     {
-        OverlappingWeapon->Equip(GetMesh(), EquippedSocket, this, this);
-        CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-        OverlappingItem = nullptr;
-        EquippedWeapon = OverlappingWeapon;
+        EquipWeapon(OverlappingWeapon);
     }
     else
     {
         if (CanSheathWeapon())
         {
-            PlayMontageSection(SheathWeaponName, EquipMontage);
-            CharacterState = ECharacterState::ECS_Unequipped;
-            ActionState = EActionState::EAS_Sheathing;
+            SheathWeapon();
         }
         else if (CanDrawWeapon())
         {
-            PlayMontageSection(DrawWeaponName, EquipMontage);
-            CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
-            ActionState = EActionState::EAS_Sheathing;
+            DrawWeapon();
         }
     }
 }
@@ -160,7 +145,6 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
 /******************
  * COMBAT ATTACKS *
  ******************/
-
 void AMainCharacter::Attack(const FName& AttackType)
 {
     switch (CharacterState)
@@ -201,7 +185,6 @@ void AMainCharacter::AttackHeavy(const FInputActionValue& Value)
 /**************************************************
  * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS *
  **************************************************/
-
 void AMainCharacter::AttackEnd()
 {
     ActionState = EActionState::EAS_Unoccupied;
@@ -212,7 +195,7 @@ void AMainCharacter::SheathEnd()
     ActionState = EActionState::EAS_Unoccupied;
 }
 
-void AMainCharacter::SheathWeapon()
+void AMainCharacter::AttachWeaponToBack()
 {
     if (EquippedWeapon)
     {
@@ -220,7 +203,7 @@ void AMainCharacter::SheathWeapon()
     }
 }
 
-void AMainCharacter::DrawWeapon()
+void AMainCharacter::AttachWeaponToHand()
 {
     if (EquippedWeapon)
     {
@@ -231,7 +214,6 @@ void AMainCharacter::DrawWeapon()
 /*****************************
  * COMBAT HELPERS - INTERNAL *
  *****************************/
-
 bool AMainCharacter::CanAttack()
 {
     // ActionState gets reset from Animation Blueprint
@@ -251,10 +233,31 @@ bool AMainCharacter::CanDrawWeapon()
            EquippedWeapon;
 }
 
+void AMainCharacter::EquipWeapon(AWeapon* Weapon)
+{
+    Weapon->Equip(GetMesh(), EquippedSocket, this, this);
+    CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+    OverlappingItem = nullptr;
+    EquippedWeapon = Weapon;
+}
+
+void AMainCharacter::SheathWeapon()
+{
+    PlayMontageSection(SheathWeaponName, EquipMontage);
+    CharacterState = ECharacterState::ECS_Unequipped;
+    ActionState = EActionState::EAS_Sheathing;
+}
+
+void AMainCharacter::DrawWeapon()
+{
+    PlayMontageSection(DrawWeaponName, EquipMontage);
+    CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+    ActionState = EActionState::EAS_Sheathing;
+}
+
 /******************
  * DAMAGE / DEATH *
  ******************/
-
 // Interface
 void AMainCharacter::GetHit_Implementation(const FVector& ImpactPoint)
 {
