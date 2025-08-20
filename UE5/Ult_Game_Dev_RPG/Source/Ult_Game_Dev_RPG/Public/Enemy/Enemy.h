@@ -18,7 +18,6 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
   public:
     AEnemy();
     virtual void Tick(float DeltaTime) override;
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
     // Interface
     virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
@@ -33,6 +32,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
   protected:
     virtual void BeginPlay() override;
     virtual void Die() override;
+
     bool InTargetRange(AActor* Target, double Radius);
     void MoveToTarget(AActor* Target);
     AActor* ChoosePatrolTarget();
@@ -54,27 +54,20 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
      * STATES *
      **********/
     UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-    EDeathPose DeathPose = EDeathPose::EDP_Alive;
+    EDeathPose DeathPose;
 
+    UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
     EEnemyState EnemyState = EEnemyState::EES_Patrolling;
+
     EDeathPose GetDeathPose(int32 PoseType);
 
-    /**********
-     * COMBAT *
-     **********/
-    UPROPERTY(EditAnywhere)
-    TSubclassOf<AWeapon> WeaponClass;
-
+    /***************************
+     * COMBAT - DAMAGE / DEATH *
+     ***************************/
+    virtual bool CanAttack() override;
     virtual void Attack(const FName& AttackType) override;
+    virtual void HandleDamage(float DamageAmount);
 
-    /**************************
-     * PLAY MONTAGE FUNCTIONS *
-     **************************/
-    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
-
-    /******************
-     * DAMAGE / DEATH *
-     ******************/
     UPROPERTY()
     AActor* CombatTarget;
 
@@ -83,6 +76,24 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 
     UPROPERTY(EditAnywhere)
     double AttackRadius = 150.f;
+
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<AWeapon> WeaponClass;
+
+    FTimerHandle AttackTimer;
+    void StartAttackTimer();
+    void ClearAttackTimer();
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float AttackMin = 0.5f;
+
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    float AttackMax = 1.f;
+
+    /*****************
+     * PLAY MONTAGES *
+     *****************/
+    virtual void PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage) override;
 
     /***********************
      * WEAPON SOCKET NAMES *
@@ -103,7 +114,7 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     UPROPERTY(EditInstanceOnly, Category = "AI Navigation")
     TArray<AActor*> PatrolTargets;
 
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, Category = "AI Navigation")
     double PatrolRadius = 200.f;
 
     FTimerHandle PatrolTimer;
@@ -115,9 +126,25 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     UPROPERTY(EditAnywhere, Category = "AI Navigation")
     float WaitMax = 10.f;
 
-    /***********
-     * HELPERS *
-     ***********/
+    /***************
+     * AI BEHAVIOR *
+     ***************/
+    void ToggleHealthBar(bool bShouldShow);
+    void HideHealthBar();
+    void ShowHealthBar();
+    void LoseInterest();
+    void StartPatrolling();
+    void ChaseTarget();
+    void AttackTarget();
+    bool IsOutsideCombatRadius();
+    bool IsOutsideAttackRadius();
+    bool IsInsideAttackRadius();
+    bool IsDead();
+    bool IsPatrolling();
+    bool IsChasing();
+    bool IsAttacking();
+    bool IsEngaged();
     void CheckCombatTarget();
     void CheckPatrolTarget();
+    void ClearPatrolTimer();
 };

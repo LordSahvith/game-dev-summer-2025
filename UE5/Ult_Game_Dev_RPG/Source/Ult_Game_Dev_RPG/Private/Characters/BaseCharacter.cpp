@@ -1,6 +1,7 @@
 #include "Characters/BaseCharacter.h"
 #include "Components/AttributeComponent.h"
 #include "Animation/AnimMontage.h"
+#include "Kismet/GameplayStatics.h"
 
 // weapon
 #include "Items/Weapons/Weapon.h"
@@ -16,7 +17,6 @@ ABaseCharacter::ABaseCharacter()
 /*****************************************
  * INHERITED OVERRIDES OF BASIC GAMEPLAY *
  *****************************************/
-
 void ABaseCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -41,17 +41,35 @@ void ABaseCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type Collisio
 /***************************
  * COMBAT - DAMAGE / DEATH *
  ***************************/
+bool ABaseCharacter::CanAttack()
+{
+    return false;
+}
 
 void ABaseCharacter::Attack(const FName& AttackType)
 {
 }
 
+void ABaseCharacter::Die()
+{
+}
+
+// interface
 void ABaseCharacter::GetHit_Implementation(const FVector& ImpactPoint)
 {
 }
 
-void ABaseCharacter::Die()
+void ABaseCharacter::HandleDamage(float DamageAmount)
 {
+    if (Attributes)
+    {
+        Attributes->RecieveDamage(DamageAmount);
+    }
+}
+
+bool ABaseCharacter::IsAlive()
+{
+    return Attributes && Attributes->IsAlive();
 }
 
 void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
@@ -96,7 +114,6 @@ void ABaseCharacter::DirectionalHitReact(const FVector& ImpactPoint)
 /*********************
  * COMBAT - MONTAGES *
  *********************/
-
 void ABaseCharacter::PlayMontageAttack(const FName& AttackName, UAnimMontage* AnimMontage)
 {
 }
@@ -113,7 +130,6 @@ void ABaseCharacter::PlayMontageHitReact(const FName& AttackName)
 /**************************************************
  * COMBAT HELPERS - ANIMATION BLUEPRINT NOTIFIERS *
  **************************************************/
-
 void ABaseCharacter::AttackEnd()
 {
 }
@@ -122,7 +138,21 @@ void ABaseCharacter::AttackEnd()
  * COMBAT HELPERS - INTERNAL *
  *****************************/
 
-bool ABaseCharacter::CanAttack()
+/*************
+ * SFX / VSF *
+ *************/
+void ABaseCharacter::PlayHitSound(const FVector& ImpactPoint)
 {
-    return false;
+    if (HitSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, HitSound, ImpactPoint);
+    }
+}
+
+void ABaseCharacter::SpawnHitParticles(const FVector& ImpactPoint)
+{
+    if (GetWorld() && HitParticles)
+    {
+        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticles, ImpactPoint);
+    }
 }

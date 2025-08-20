@@ -63,7 +63,7 @@ void AMainCharacter::BeginPlay()
         }
     }
 
-    Tags.Add(FName("MainCharacter"));
+    Tags.Add(GetEngageableTagName());
 }
 
 void AMainCharacter::Tick(float DeltaTime)

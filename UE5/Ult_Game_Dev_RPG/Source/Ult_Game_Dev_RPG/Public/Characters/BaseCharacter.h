@@ -29,7 +29,6 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
 
   protected:
     virtual void BeginPlay() override;
-    virtual void Die();
 
     UAnimInstance* AnimInstance;
 
@@ -45,22 +44,16 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     UPROPERTY(VisibleAnywhere)
     UAttributeComponent* Attributes;
 
-    /**********
-     * COMBAT *
-     **********/
-    virtual void Attack(const FName& AttackType);
+    /***************************
+     * COMBAT - DAMAGE / DEATH *
+     ***************************/
     virtual bool CanAttack();
+    virtual void Attack(const FName& AttackType);
 
-    /************************************
-     * ANIMATION BLUEPRINT NOTIFY NAMES *
-     ************************************/
-    const FName LightAttack = FName("LightAttack");
-    const FName MediumAttack = FName("MediumAttack");
-    const FName HeavyAttack = FName("HeavyAttack");
+    virtual void Die();
+    virtual void HandleDamage(float DamageAmount);
+    bool IsAlive();
 
-    /******************
-     * DAMAGE / DEATH *
-     ******************/
     void DirectionalHitReact(const FVector& ImpactPoint);
 
     /**********************
@@ -90,11 +83,22 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     /************************************
      * ANIMATION BLUEPRINT NOTIFY NAMES *
      ************************************/
+    const FName LightAttack = FName("LightAttack");
+    const FName MediumAttack = FName("MediumAttack");
+    const FName HeavyAttack = FName("HeavyAttack");
+
     const FName ReactFromBack = FName("FromBack");
     const FName ReactFromFront = FName("FromFront");
     const FName ReactFromLeft = FName("FromLeft");
     const FName ReactFromRight = FName("FromRight");
 
+    /*************
+     * SFX / VSF *
+     *************/
+    void PlayHitSound(const FVector& ImpactPoint);
+    void SpawnHitParticles(const FVector& ImpactPoint);
+
+  private:
     /*************
      * SFX / VSF *
      *************/
@@ -104,5 +108,11 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     UPROPERTY(EditAnywhere, Category = "Visual Effects")
     UParticleSystem* HitParticles;
 
-  private:
+    const FName EngageableTagName = FName("CombatAcceptable");
+
+  public:
+    FORCEINLINE FName GetEngageableTagName()
+    {
+        return EngageableTagName;
+    }
 };
