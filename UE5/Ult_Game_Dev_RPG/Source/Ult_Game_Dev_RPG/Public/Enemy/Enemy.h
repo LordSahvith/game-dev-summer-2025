@@ -28,6 +28,8 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
                              class AController* EventInstigator,
                              AActor* DamageCauser) override;
 
+    virtual void Destroyed() override;
+
   protected:
     virtual void BeginPlay() override;
     virtual void Die() override;
@@ -37,10 +39,6 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 
     UFUNCTION()
     void PawnSeen(APawn* SeenPawn);
-
-    /**********
-     * STATES *
-     **********/
 
   private:
     /**************
@@ -61,6 +59,12 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
     EEnemyState EnemyState = EEnemyState::EES_Patrolling;
     EDeathPose GetDeathPose(int32 PoseType);
 
+    /**********
+     * COMBAT *
+     **********/
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<AWeapon> WeaponClass;
+
     /******************
      * DAMAGE / DEATH *
      ******************/
@@ -72,6 +76,12 @@ class ULT_GAME_DEV_RPG_API AEnemy : public ABaseCharacter
 
     UPROPERTY(EditAnywhere)
     double AttackRadius = 150.f;
+
+    /***********************
+     * WEAPON SOCKET NAMES *
+     ***********************/
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    FName EquippedSocket = FName("RightSocket");
 
     /***************************
      * PATROLLING / NAVIGATION *

@@ -8,6 +8,8 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AttributeComponent.h"
+#include "Items/Weapons/Weapon.h"
+#include "Components/BoxComponent.h"
 
 AEnemy::AEnemy()
 {
@@ -54,6 +56,15 @@ void AEnemy::BeginPlay()
     if (PawnSensing)
     {
         PawnSensing->OnSeePawn.AddDynamic(this, &AEnemy::PawnSeen);
+    }
+
+    UWorld* World = GetWorld();
+
+    if (World && WeaponClass)
+    {
+        AWeapon* DefaultWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass);
+        DefaultWeapon->Equip(GetMesh(), EquippedSocket, this, this);
+        EquippedWeapon = DefaultWeapon;
     }
 }
 
@@ -180,6 +191,14 @@ EDeathPose AEnemy::GetDeathPose(int32 PoseType)
     }
 
     return Pose;
+}
+
+void AEnemy::Destroyed()
+{
+    if (EquippedWeapon)
+    {
+        EquippedWeapon->Destroy();
+    }
 }
 
 /***************************
