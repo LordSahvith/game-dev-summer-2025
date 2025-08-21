@@ -33,7 +33,7 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
      * WEAPON / ITEMS *
      ******************/
     UFUNCTION(BlueprintCallable)
-    void SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled);
+    void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
 
     UPROPERTY(VisibleAnywhere, Category = "Weapon")
     AWeapon* EquippedWeapon;
@@ -94,27 +94,28 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     void DisableCapsule();
 
   private:
-    const FName EngageableTagName = FName("CombatAcceptable");
+    const FName EngageableTagName = FName("EngageableTarget");
+    const FName EnemyTagName = FName("Enemy");
 
     /*************
      * SFX / VSF *
      *************/
-    UPROPERTY(EditAnywhere, Category = "Sound Effects")
+    UPROPERTY(EditAnywhere, Category = "Combat")
     USoundBase* HitSound;
 
-    UPROPERTY(EditAnywhere, Category = "Visual Effects")
+    UPROPERTY(EditAnywhere, Category = "Combat")
     UParticleSystem* HitParticles;
 
     /**********************
      * ANIMATION MONTAGES *
      **********************/
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UPROPERTY(EditDefaultsOnly, Category = "Combat")
     UAnimMontage* AttackMontage;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UPROPERTY(EditDefaultsOnly, Category = "Combat")
     UAnimMontage* HitReactMontage;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Montages")
+    UPROPERTY(EditDefaultsOnly, Category = "Combat")
     UAnimMontage* DeathMontage;
 
     UPROPERTY(EditAnywhere, Category = "Combat")
@@ -127,5 +128,10 @@ class ULT_GAME_DEV_RPG_API ABaseCharacter : public ACharacter, public IHitInterf
     FORCEINLINE FName GetEngageableTagName()
     {
         return EngageableTagName;
+    }
+
+    FORCEINLINE FName GetEnemyTagName()
+    {
+        return EnemyTagName;
     }
 };

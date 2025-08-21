@@ -52,6 +52,8 @@ void AEnemy::BeginPlay()
     }
 
     InitializeEnemy();
+
+    Tags.Add(GetEnemyTagName());
 }
 
 void AEnemy::Tick(float DeltaTime)

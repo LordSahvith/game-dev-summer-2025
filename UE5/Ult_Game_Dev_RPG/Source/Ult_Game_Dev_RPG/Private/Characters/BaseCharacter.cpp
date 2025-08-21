@@ -32,7 +32,7 @@ void ABaseCharacter::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void ABaseCharacter::SetWeaponCollisioneEnabled(ECollisionEnabled::Type CollisionEnabled)
+void ABaseCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
 {
     if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
     {

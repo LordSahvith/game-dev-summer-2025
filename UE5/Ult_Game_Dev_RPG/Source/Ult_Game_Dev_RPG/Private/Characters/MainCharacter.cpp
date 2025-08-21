@@ -13,6 +13,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // weapon
 #include "Items/Weapons/Weapon.h"
@@ -27,6 +28,12 @@ AMainCharacter::AMainCharacter()
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
+
+    GetMesh()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
+    GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+    GetMesh()->SetGenerateOverlapEvents(true);
 
     SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
     SpringArm->SetupAttachment(GetRootComponent());
@@ -142,9 +149,16 @@ void AMainCharacter::Equip(const FInputActionValue& Value)
     }
 }
 
-/******************
- * COMBAT ATTACKS *
- ******************/
+/***************************
+ * COMBAT - DAMAGE / DEATH *
+ ***************************/
+// Interface
+void AMainCharacter::GetHit_Implementation(const FVector& ImpactPoint)
+{
+    PlayHitSound(ImpactPoint);
+    SpawnHitParticles(ImpactPoint);
+}
+
 void AMainCharacter::Attack(const FName& AttackType)
 {
     switch (CharacterState)
@@ -253,12 +267,4 @@ void AMainCharacter::DrawWeapon()
     PlayMontageSection(DrawWeaponName, EquipMontage);
     CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
     ActionState = EActionState::EAS_Sheathing;
-}
-
-/******************
- * DAMAGE / DEATH *
- ******************/
-// Interface
-void AMainCharacter::GetHit_Implementation(const FVector& ImpactPoint)
-{
 }
