@@ -3,7 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/AuraCharacterBase.h"
-#include "Interactin/EnemyInterface.h"
+#include "Interaction/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
 UCLASS()
