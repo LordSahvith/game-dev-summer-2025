@@ -6,6 +6,8 @@
 #include "AuraPlayerController.generated.h"
 
 class UInputMappingContext;
+class UInputAction;
+struct FInputActionValue;
 
 UCLASS()
 class AURA_API AAuraPlayerController : public APlayerController
@@ -17,8 +19,14 @@ class AURA_API AAuraPlayerController : public APlayerController
 
   protected:
     virtual void BeginPlay() override;
+    virtual void SetupInputComponent() override;
 
   private:
     UPROPERTY(Editanywhere, Category = "Input")
     TObjectPtr<UInputMappingContext> AuraContext;
+
+    UPROPERTY(Editanywhere, Category = "Input")
+    TObjectPtr<UInputAction> MoveAction;
+
+    void Move(const FInputActionValue& InputActionValue);
 };
