@@ -87,4 +87,27 @@ void AAuraPlayerController::CursorTrace()
      * 5. both actors are valid but are the same actor
      *    - do nothing
      */
+
+    if (LastActor)
+    {
+        if (CurrentActor)
+        {
+            CurrentActor->HighlightActor();
+        }
+    }
+    else
+    {
+        if (CurrentActor)
+        {
+            LastActor->UnHighlightActor();
+        }
+        else
+        {
+            if (LastActor != CurrentActor)
+            {
+                LastActor->UnHighlightActor();
+                CurrentActor->HighlightActor();
+            }
+        }
+    }
 }
