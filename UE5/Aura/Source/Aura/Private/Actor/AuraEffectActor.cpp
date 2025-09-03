@@ -21,8 +21,6 @@ void AAuraEffectActor::HighlightActor()
 {
     Mesh->SetRenderCustomDepth(true);
     Mesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
-
-    GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan, FString("Here"));
 }
 
 void AAuraEffectActor::UnHighlightActor() { Mesh->SetRenderCustomDepth(false); }
