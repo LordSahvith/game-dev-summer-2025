@@ -1,5 +1,6 @@
 // Copyright Lord Savith
 #include "Actor/AuraEffectActor.h"
+#include "Aura/Aura.h"
 #include "Components/SphereComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
@@ -9,9 +10,22 @@ AAuraEffectActor::AAuraEffectActor()
     PrimaryActorTick.bCanEverTick = false;
 
     SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
+
+    Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Pickup Mesh");
+    Mesh->SetupAttachment(GetRootComponent());
 }
 
 void AAuraEffectActor::BeginPlay() { Super::BeginPlay(); }
+
+void AAuraEffectActor::HighlightActor()
+{
+    Mesh->SetRenderCustomDepth(true);
+    Mesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+
+    GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Cyan, FString("Here"));
+}
+
+void AAuraEffectActor::UnHighlightActor() { Mesh->SetRenderCustomDepth(false); }
 
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {

@@ -4,10 +4,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
+#include "Interaction/ActorHoverInterface.h"
 #include "AuraEffectActor.generated.h"
 
 class UGameplayEffect;
 class UAbilitySystemComponent;
+class UStaticMeshComponent;
 
 UENUM(BlueprintType)
 enum class EEffectApplicationPolicy : uint8
@@ -25,12 +27,18 @@ enum class EEffectRemovalPolicy : uint8
 };
 
 UCLASS()
-class AURA_API AAuraEffectActor : public AActor
+class AURA_API AAuraEffectActor : public AActor, public IActorHoverInterface
 {
     GENERATED_BODY()
 
   public:
     AAuraEffectActor();
+
+    /**
+     * @interface: IActorHoverInterface
+     */
+    virtual void HighlightActor() override;
+    virtual void UnHighlightActor() override;
 
   protected:
     virtual void BeginPlay() override;
@@ -74,4 +82,6 @@ class AURA_API AAuraEffectActor : public AActor
     float ActorLevel = 1.f;
 
   private:
+    UPROPERTY(EditAnywhere)
+    TObjectPtr<UStaticMeshComponent> Mesh;
 };

@@ -7,7 +7,7 @@
 
 class UInputMappingContext;
 class UInputAction;
-class IEnemyInterface;
+class IActorHoverInterface;
 struct FInputActionValue;
 
 UCLASS()
@@ -34,6 +34,6 @@ class AURA_API AAuraPlayerController : public APlayerController
 
     void CursorTrace();
 
-    TScriptInterface<IEnemyInterface> LastActor;
-    TScriptInterface<IEnemyInterface> CurrentActor;
+    TScriptInterface<IActorHoverInterface> LastActor;
+    TScriptInterface<IActorHoverInterface> CurrentActor;
 };
