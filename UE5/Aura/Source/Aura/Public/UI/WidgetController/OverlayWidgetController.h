@@ -16,16 +16,16 @@ struct FUIWidgetRow : public FTableRowBase
     GENERATED_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    FGameplayTag MessageTag = FGameplayTag();
+    TSubclassOf<UAuraUserWidget> MessageWidget;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UTexture2D* Image = nullptr;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText Message = FText();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    TSubclassOf<UAuraUserWidget> MessageWidget;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    UTexture2D* Image = nullptr;
+    FGameplayTag MessageTag = FGameplayTag();
 };
 
 /**
