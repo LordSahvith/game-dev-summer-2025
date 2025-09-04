@@ -5,12 +5,6 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemBlueprintLibrary.h"
 
-UAuraAttributeSet::UAuraAttributeSet()
-{
-    InitHealth(100.f);
-    InitMana(100.f);
-}
-
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);

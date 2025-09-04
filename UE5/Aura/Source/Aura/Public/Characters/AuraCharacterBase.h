@@ -41,6 +41,9 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
     TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+    TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
     void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;
     void InitializeDefaultAttributes() const;
 
