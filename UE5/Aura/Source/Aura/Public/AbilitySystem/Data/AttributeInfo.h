@@ -17,11 +17,11 @@ struct FAuraAttributeInfo
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
     FText AttributeName{FText()};
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    FText AttributeDescription{FText()};
-
     UPROPERTY(BlueprintReadOnly)
     float AttributeValue{0.f};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FText AttributeDescription{FText()};
 };
 
 UCLASS()
