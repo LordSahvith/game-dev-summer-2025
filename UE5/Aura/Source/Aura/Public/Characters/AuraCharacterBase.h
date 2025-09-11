@@ -30,6 +30,11 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
     UPROPERTY(EditAnywhere, Category = "Combat")
     TObjectPtr<USkeletalMeshComponent> Weapon;
 
+    UPROPERTY(EditAnywhere, Category = "Combat")
+    FName WeaponTipSocketName;
+
+    virtual FVector GetCombatSocketLocation() override;
+
     UPROPERTY()
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
