@@ -3,11 +3,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
 class IActorHoverInterface;
+class UAuraInputConfig;
+
 struct FInputActionValue;
 
 UCLASS()
@@ -36,4 +39,11 @@ class AURA_API AAuraPlayerController : public APlayerController
 
     TScriptInterface<IActorHoverInterface> LastActor;
     TScriptInterface<IActorHoverInterface> CurrentActor;
+
+    void AbilityInputTagPressed(FGameplayTag InputTag);
+    void AbilityInputTagReleased(FGameplayTag InputTag);
+    void AbilityInputTagHeld(FGameplayTag InputTag);
+
+    UPROPERTY(EditDefaultsOnly, Category = "Input")
+    TObjectPtr<UAuraInputConfig> InputConfig;
 };
