@@ -13,7 +13,6 @@
 AAuraPlayerController::AAuraPlayerController()
 {
     bReplicates = true;
-
     Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
@@ -22,6 +21,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
     Super::PlayerTick(DeltaTime);
 
     CursorTrace();
+    AutoRun();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -79,7 +79,6 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::CursorTrace()
 {
-    FHitResult CursorHit;
     GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, CursorHit);
 
     if (!CursorHit.bBlockingHit) return;
@@ -87,35 +86,10 @@ void AAuraPlayerController::CursorTrace()
     LastActor = CurrentActor;
     CurrentActor = CursorHit.GetActor();
 
-    /**
-     * Line trace from cursor. thre are several scenarios:
-     * 1. LastActor is null && CurrentActor is null
-     *    - do nothing
-     * 2. LastActor is null && CurrentActor is valid
-     *    - Highlight CurrentActor
-     * 3. LastActor is valid && CurrentActor is null
-     *    - UnHighlight LastActor
-     * 4. Both actors are valid, but LastActor != CurrentActor
-     *    - UnHighlight LastActor && Highlight CurrentActor
-     * 5. both actors are valid but are the same actor
-     *    - do nothing
-     */
-
-    if (LastActor == nullptr)
+    if (LastActor != CurrentActor)
     {
-        if (CurrentActor != nullptr) { CurrentActor->HighlightActor(); }
-    }
-    else
-    {
-        if (CurrentActor == nullptr) { LastActor->UnHighlightActor(); }
-        else
-        {
-            if (LastActor != CurrentActor)
-            {
-                LastActor->UnHighlightActor();
-                CurrentActor->HighlightActor();
-            }
-        }
+        if (LastActor) { LastActor->UnHighlightActor(); }
+        if (CurrentActor) { CurrentActor->HighlightActor(); }
     }
 }
 
@@ -140,7 +114,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
     if (bTargeting) { GetASC()->AbilityInputTagReleased(InputTag); }
     else
     {
-        APawn* ControlledPawn = GetPawn();
+        const APawn* ControlledPawn = GetPawn();
 
         if (FollowTime <= ShortPressThreshold && ControlledPawn)
         {
@@ -152,9 +126,10 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
                 for (const FVector& PointLoc : NavPath->PathPoints)
                 {
                     Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
-                    DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
                 }
 
+                CachedDestination =
+                    NavPath->PathPoints.IsEmpty() ? ControlledPawn->GetActorLocation() : NavPath->PathPoints.Last();
                 bAutoRunning = true;
             }
         }
@@ -178,9 +153,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
     {
         FollowTime += GetWorld()->GetDeltaSeconds();
 
-        FHitResult Hit;
-
-        if (GetHitResultUnderCursor(ECC_Visibility, false, Hit)) { CachedDestination = Hit.ImpactPoint; }
+        if (CursorHit.bBlockingHit) { CachedDestination = CursorHit.ImpactPoint; }
 
         if (APawn* ControlledPawn = GetPawn())
         {
@@ -199,4 +172,23 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
     }
 
     return AuraAbilitySystemComponent;
+}
+
+void AAuraPlayerController::AutoRun()
+{
+    if (!bAutoRunning) { return; }
+
+    if (APawn* ControlledPawn = GetPawn())
+    {
+        const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(),
+                                                                                    ESplineCoordinateSpace::World);
+        const FVector Direction =
+            Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+
+        ControlledPawn->AddMovementInput(Direction);
+
+        const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+
+        if (DistanceToDestination <= AutoRunAcceptanceRadius) { bAutoRunning = false; }
+    }
 }

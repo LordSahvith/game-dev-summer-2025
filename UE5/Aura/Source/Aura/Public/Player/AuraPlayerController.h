@@ -41,6 +41,7 @@ class AURA_API AAuraPlayerController : public APlayerController
 
     TScriptInterface<IActorHoverInterface> LastActor;
     TScriptInterface<IActorHoverInterface> CurrentActor;
+    FHitResult CursorHit;
 
     void AbilityInputTagPressed(FGameplayTag InputTag);
     void AbilityInputTagReleased(FGameplayTag InputTag);
@@ -65,4 +66,6 @@ class AURA_API AAuraPlayerController : public APlayerController
 
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<USplineComponent> Spline;
+
+    void AutoRun();
 };
