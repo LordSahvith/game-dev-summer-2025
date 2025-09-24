@@ -6,6 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
+#include "Aura/Aura.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -14,6 +15,7 @@ AAuraProjectile::AAuraProjectile()
 
     Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
     SetRootComponent(Sphere);
+    Sphere->SetCollisionObjectType(ECC_Projectile);
     Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
     Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
