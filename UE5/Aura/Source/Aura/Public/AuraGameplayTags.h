@@ -38,7 +38,8 @@ struct FAuraGameplayTags
     FGameplayTag InputTag_3;
     FGameplayTag InputTag_4;
 
-  protected:
+    FGameplayTag Damage;
+
   private:
     static FAuraGameplayTags GameplayTags;
 
