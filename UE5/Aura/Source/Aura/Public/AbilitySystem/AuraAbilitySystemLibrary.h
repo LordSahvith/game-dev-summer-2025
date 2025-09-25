@@ -3,10 +3,12 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Data/CharacterClassInfo.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
 class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
+class UAbilitySystemComponent;
 
 UCLASS()
 class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
@@ -19,4 +21,15 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
 
     UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|WidgetController")
     static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+    static void InitializeDefaultAttributes(const UObject* WorldContextObject,
+                                            ECharacterClass CharacterClass,
+                                            float Level,
+                                            UAbilitySystemComponent* ASC);
+
+  private:
+    static void ApplyGameplayEffect(UAbilitySystemComponent* ASC,
+                                    TSubclassOf<UGameplayEffect> GameplayEffectClass,
+                                    float Level);
 };

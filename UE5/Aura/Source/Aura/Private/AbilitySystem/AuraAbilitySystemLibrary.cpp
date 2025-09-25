@@ -4,6 +4,8 @@
 #include "UI/HUD/AuraHUD.h"
 #include "Player/AuraPlayerState.h"
 #include "UI/WidgetController/AuraWidgetController.h"
+#include "Game/AuraGameModeBase.h"
+#include "AbilitySystemComponent.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -40,4 +42,33 @@ UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMenuWidge
     }
 
     return nullptr;
+}
+
+void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
+                                                            ECharacterClass CharacterClass,
+                                                            float Level,
+                                                            UAbilitySystemComponent* ASC)
+{
+    AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+
+    if (AuraGameMode == nullptr) { return; }
+
+    UCharacterClassInfo* CharacterClassInfo = AuraGameMode->CharacterClassInfo;
+    FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+
+    ApplyGameplayEffect(ASC, ClassDefaultInfo.PrimaryAttributes, Level);
+    ApplyGameplayEffect(ASC, CharacterClassInfo->SecondaryAttributes, Level);
+    ApplyGameplayEffect(ASC, CharacterClassInfo->VitalAttributes, Level);
+}
+
+void UAuraAbilitySystemLibrary::ApplyGameplayEffect(UAbilitySystemComponent* ASC,
+                                                    TSubclassOf<UGameplayEffect> GameplayEffectClass,
+                                                    float Level)
+{
+    AActor* AvatarActor = ASC->GetAvatarActor();
+    FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+    ContextHandle.AddSourceObject(AvatarActor);
+    const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
+
+    ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
