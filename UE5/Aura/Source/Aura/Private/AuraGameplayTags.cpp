@@ -52,7 +52,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
     GameplayTags.InputTag_2 = SetGameplayTag(FName("InputTag.2"), FString("Input Tag for 2 key"));
     GameplayTags.InputTag_3 = SetGameplayTag(FName("InputTag.3"), FString("Input Tag for 3 key"));
     GameplayTags.InputTag_4 = SetGameplayTag(FName("InputTag.4"), FString("Input Tag for 4 key"));
+
+    /**
+     * COMBAT
+     */
     GameplayTags.Damage = SetGameplayTag(FName("Damage"), FString("Damage"));
+    GameplayTags.Effects_HitReact = SetGameplayTag(FName("Effects.HitReact"), FString("Tag granted when Hit Reacting"));
 }
 
 FGameplayTag FAuraGameplayTags::SetGameplayTag(FName TagName, FString Description)
