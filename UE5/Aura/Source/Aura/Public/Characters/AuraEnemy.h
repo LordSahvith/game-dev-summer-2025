@@ -28,6 +28,7 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
      * @interface: ICombatInterface
      */
     virtual int32 GetPlayerLevel() override;
+    virtual void Die() override;
 
     UPROPERTY(BlueprintAssignable)
     FOnAttributeChangedSignature OnHealthChanged;
@@ -37,11 +38,14 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 
     void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
-    UPROPERTY(BlueprintReadOnly, Category = "Combaat")
+    UPROPERTY(BlueprintReadOnly, Category = "Combat")
     bool bHitReacting = false;
-    
-    UPROPERTY(BlueprintReadOnly, Category = "Combaat")
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     float BaseWalkSpeed = 250.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+    float LifeSpan = 5.f;
 
   protected:
     virtual void BeginPlay() override;

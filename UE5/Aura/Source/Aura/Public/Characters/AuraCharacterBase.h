@@ -25,6 +25,14 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
     virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
+    /**
+     * @interface: ICombatInterface
+     */
+    virtual void Die() override;
+
+    UFUNCTION(NetMulticast, Reliable)
+    virtual void MulticastHandleDeath();
+
   protected:
     virtual void BeginPlay() override;
     virtual void InitAbilityActorInfo();
