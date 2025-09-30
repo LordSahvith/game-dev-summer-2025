@@ -15,7 +15,4 @@ class AURA_API UExecCalc_Damage : public UGameplayEffectExecutionCalculation
 
     virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
                                         FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
-
-  private:
-    float GetAttributeMagnitude(const FGameplayEffectAttributeCaptureDefinition& AttributeDef, float Value);
 };
