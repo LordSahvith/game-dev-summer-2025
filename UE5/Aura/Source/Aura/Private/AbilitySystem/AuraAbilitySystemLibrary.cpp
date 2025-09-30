@@ -49,11 +49,10 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
                                                             float Level,
                                                             UAbilitySystemComponent* ASC)
 {
-    AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+    UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 
-    if (AuraGameMode == nullptr) { return; }
+    if (!CharacterClassInfo) { return; }
 
-    UCharacterClassInfo* CharacterClassInfo = AuraGameMode->CharacterClassInfo;
     FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
     ApplyGameplayEffect(ASC, ClassDefaultInfo.PrimaryAttributes, Level);
@@ -63,11 +62,10 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-    AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+    UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 
-    if (AuraGameMode == nullptr) { return; }
+    if (!CharacterClassInfo) { return; }
 
-    UCharacterClassInfo* CharacterClassInfo = AuraGameMode->CharacterClassInfo;
     for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
     {
         FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
@@ -75,13 +73,19 @@ void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContext
     }
 }
 
+UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+    AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+
+    return AuraGameMode ? AuraGameMode->CharacterClassInfo : nullptr;
+}
+
 void UAuraAbilitySystemLibrary::ApplyGameplayEffect(UAbilitySystemComponent* ASC,
                                                     TSubclassOf<UGameplayEffect> GameplayEffectClass,
                                                     float Level)
 {
-    AActor* AvatarActor = ASC->GetAvatarActor();
     FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
-    ContextHandle.AddSourceObject(AvatarActor);
+    ContextHandle.AddSourceObject(ASC->GetAvatarActor());
     const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
 
     ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());

@@ -31,6 +31,9 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
     UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
     static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
 
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
+    static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
+
   private:
     static void ApplyGameplayEffect(UAbilitySystemComponent* ASC,
                                     TSubclassOf<UGameplayEffect> GameplayEffectClass,

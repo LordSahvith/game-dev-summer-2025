@@ -27,7 +27,7 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
     /**
      * @interface: ICombatInterface
      */
-    virtual int32 GetPlayerLevel() override;
+    virtual int32 GetPlayerLevel() const override;
     virtual void Die() override;
 
     UPROPERTY(BlueprintAssignable)

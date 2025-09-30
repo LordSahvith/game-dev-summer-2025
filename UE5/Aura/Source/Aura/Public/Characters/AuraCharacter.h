@@ -18,7 +18,7 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
     /**
      * @interface: ICombatInterface
      */
-    virtual int32 GetPlayerLevel() override;
+    virtual int32 GetPlayerLevel() const override;
 
   protected:
   private:

@@ -7,6 +7,7 @@
 
 class UGameplayEffect;
 class UGameplayAbility;
+class UCurveTable;
 
 UENUM(BlueprintType)
 enum class ECharacterClass : uint8
@@ -42,6 +43,9 @@ class AURA_API UCharacterClassInfo : public UDataAsset
 
     UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
     TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults|Damage")
+    TObjectPtr<UCurveTable> DamageCalculationCoefficients;
 
     FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 };
