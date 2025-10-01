@@ -75,18 +75,18 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
     float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
 
     // Attribute Magnitudes
-    float TargetBlockChance = 0.f;
     float TargetArmor = 0.f;
     float SourceArmorPenetration = 0.f;
+    float TargetBlockChance = 0.f;
     float SourceCriticalHitChance = 0.f;
     float SourceCriticalHitDamage = 0.f;
     float TargetCriticalHitResistance = 0.f;
 
-    TargetBlockChance =
-        GetAttributeMagnitude(ExecutionParams, DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance);
     TargetArmor = GetAttributeMagnitude(ExecutionParams, DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
     SourceArmorPenetration = GetAttributeMagnitude(
         ExecutionParams, DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration);
+    TargetBlockChance =
+        GetAttributeMagnitude(ExecutionParams, DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance);
     SourceCriticalHitChance = GetAttributeMagnitude(
         ExecutionParams, DamageStatics().CriticalHitChanceDef, EvaluationParameters, SourceCriticalHitChance);
     SourceCriticalHitDamage = GetAttributeMagnitude(
