@@ -73,7 +73,12 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
     if (!CharacterClassInfo) { return; }
 
     // Get Damage set by caller magnitude
-    float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
+    float Damage = 0;
+    for (FGameplayTag DamageTypeTag : FAuraGameplayTags::Get().DamageTypes)
+    {
+        const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+        Damage += DamageTypeValue;
+    }
 
     // Attribute Magnitudes
     float TargetArmor = 0.f;
