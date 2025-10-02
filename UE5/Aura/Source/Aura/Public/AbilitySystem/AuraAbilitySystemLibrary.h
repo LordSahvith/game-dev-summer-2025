@@ -34,6 +34,18 @@ class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary
     UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
     static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
 
+    UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static bool GetIsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+    UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static bool GetIsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
+
+    UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+    static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
   private:
     static void ApplyGameplayEffect(UAbilitySystemComponent* ASC,
                                     TSubclassOf<UGameplayEffect> GameplayEffectClass,

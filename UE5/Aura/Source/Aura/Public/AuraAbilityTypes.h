@@ -10,11 +10,11 @@ struct FAuraGameplayEffectContext : public FGameplayEffectContext
     GENERATED_BODY()
 
   public:
-    bool IsBlockedHit() { return bIsBlockedHit; }
-    bool IsCriticalHit() { return bIsCriticalHit; }
+    bool GetIsCriticalHit() const { return bIsCriticalHit; }
+    bool GetIsBlockedHit() const { return bIsBlockedHit; }
 
-    bool SetIsBlockedHit(bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
-    bool SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
+    void SetIsBlockedHit(bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
+    void SetIsCriticalHit(bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
 
     /** Returns the actual struct used for serialization, subclasses must override this! */
     virtual UScriptStruct* GetScriptStruct() const { return StaticStruct(); }

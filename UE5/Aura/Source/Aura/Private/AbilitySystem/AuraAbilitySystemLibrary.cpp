@@ -6,6 +6,7 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "Game/AuraGameModeBase.h"
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -78,6 +79,45 @@ UCharacterClassInfo* UAuraAbilitySystemLibrary::GetCharacterClassInfo(const UObj
     AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 
     return AuraGameMode ? AuraGameMode->CharacterClassInfo : nullptr;
+}
+
+bool UAuraAbilitySystemLibrary::GetIsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FAuraGameplayEffectContext* AuraEffectContext =
+            static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        return AuraEffectContext->GetIsBlockedHit();
+    }
+    return false;
+}
+
+bool UAuraAbilitySystemLibrary::GetIsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if (const FAuraGameplayEffectContext* AuraEffectContext =
+            static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        return AuraEffectContext->GetIsCriticalHit();
+    }
+    return false;
+}
+
+void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+    if (FAuraGameplayEffectContext* AuraEffectContext =
+            static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        AuraEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+    }
+}
+
+void UAuraAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+                                                 bool bInIsCriticalHit)
+{
+    if (FAuraGameplayEffectContext* AuraEffectContext =
+            static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        AuraEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+    }
 }
 
 void UAuraAbilitySystemLibrary::ApplyGameplayEffect(UAbilitySystemComponent* ASC,
