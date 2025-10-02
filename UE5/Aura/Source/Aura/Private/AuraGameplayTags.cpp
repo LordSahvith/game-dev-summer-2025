@@ -54,13 +54,38 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
     GameplayTags.InputTag_4 = SetGameplayTag(FName("InputTag.4"), FString("Input Tag for 4 key"));
 
     /**
-     * COMBAT
+     * COMBAT - DAMAGE TYPES
      */
     GameplayTags.Damage = SetGameplayTag(FName("Damage"), FString("Damage"));
+    GameplayTags.Damage_Arcane = SetGameplayTag(FName("Damage.Arcane"), FString("Arcane Damage Type"));
     GameplayTags.Damage_Fire = SetGameplayTag(FName("Damage.Fire"), FString("Fire Damage Type"));
+    GameplayTags.Damage_Lightning = SetGameplayTag(FName("Damage.Lightning"), FString("Lightning Damage Type"));
+    GameplayTags.Damage_Physical = SetGameplayTag(FName("Damage.Physical"), FString("Physical Damage Type"));
 
-    GameplayTags.DamageTypes.Add(GameplayTags.Damage_Fire);
+    /**
+     * COMBAT - DAMAGE RESISTANCES
+     */
+    GameplayTags.Attributes_Resistance_Arcane =
+        SetGameplayTag(FName("Attributes.Resistance.Arcane"), FString("Resistance to Arcane Damage"));
+    GameplayTags.Attributes_Resistance_Fire =
+        SetGameplayTag(FName("Attributes.Resistance.Fire"), FString("Resistance to Fire Damage"));
+    GameplayTags.Attributes_Resistance_Lightning =
+        SetGameplayTag(FName("Attributes.Resistance.Lightning"), FString("Resistance to Lightning Damage"));
+    GameplayTags.Attributes_Resistance_Physical =
+        SetGameplayTag(FName("Attributes.Resistance.Physical"), FString("Resistance to Physical Damage"));
+    /**
+     * COMBAT - MAP DAMAGE TO RESISTANCES
+     */
+    GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
+    GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);
+    GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning,
+                                              GameplayTags.Attributes_Resistance_Lightning);
+    GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical,
+                                              GameplayTags.Attributes_Resistance_Physical);
 
+    /**
+     * COMBAT - EFFECTS
+     */
     GameplayTags.Effects_HitReact = SetGameplayTag(FName("Effects.HitReact"), FString("Tag granted when Hit Reacting"));
 }
 
