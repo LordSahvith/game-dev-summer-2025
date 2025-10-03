@@ -52,8 +52,6 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 {
     UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 
-    if (!CharacterClassInfo) { return; }
-
     FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
     ApplyGameplayEffect(ASC, ClassDefaultInfo.PrimaryAttributes, Level);
@@ -64,8 +62,6 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
     UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
-
-    if (!CharacterClassInfo) { return; }
 
     for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
     {
