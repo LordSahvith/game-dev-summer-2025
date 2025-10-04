@@ -17,7 +17,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
         // Calculate Rotation Direction of the Target
         const FVector SocketLocation = CombatInteface->GetCombatSocketLocation();
         FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-        Rotation.Pitch = 0.f;
+        // Rotation.Pitch = 0.f;
 
         // Rotate to Face Target
         FTransform SpawnTransform;
