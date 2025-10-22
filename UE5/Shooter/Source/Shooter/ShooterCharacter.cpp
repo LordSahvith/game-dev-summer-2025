@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 // Input
 #include "Components/InputComponent.h"
@@ -106,10 +107,18 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 
 void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 {
-	const bool bIsFireButtonPressed = Value.Get<bool>();
-
-	if (bIsFireButtonPressed && FireSound)
+	if (FireSound)
 	{
 		UGameplayStatics::PlaySound2D(this, FireSound);
+	}
+
+	if (const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket"))
+	{
+		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
+
+		if (MuzzleFlash)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
+		}
 	}
 }
