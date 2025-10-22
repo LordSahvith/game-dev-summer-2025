@@ -21,7 +21,7 @@ AShooterCharacter::AShooterCharacter()
 	bUseControllerRotationRoll = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
+	//GetCharacterMovement()->RotationRate = FRotator(0.f, 450.f, 0.f);
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
@@ -59,6 +59,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
 	}
 }
 
@@ -79,5 +80,16 @@ void AShooterCharacter::Move(const FInputActionValue& Value)
 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
+	}
+}
+
+void AShooterCharacter::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookVector = Value.Get<FVector2D>();
+
+	if (GetController())
+	{
+		AddControllerYawInput(LookVector.X);
+		AddControllerPitchInput(LookVector.Y);
 	}
 }
