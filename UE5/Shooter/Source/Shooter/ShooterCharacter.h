@@ -13,6 +13,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class USoundCue;
 class UParticleSystem;
+class UAnimMontage;
 
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
@@ -38,15 +39,21 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+	/**********
+	* EFFECTS *
+	**********/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	USoundCue* FireSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* MuzzleFlash;
 
-	/*********
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* HipFireMontage;
+
+	/********
 	* INPUT *
-	*********/
+	********/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* CharacterMappingContext;
 
@@ -64,7 +71,7 @@ private:
 
 	/***********************
 	 * CALLBACKS FOR INPUT *
-	 ***********************/
+	 **********************/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void FireWeapon(const FInputActionValue& Value);
