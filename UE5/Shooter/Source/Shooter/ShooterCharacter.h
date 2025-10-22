@@ -49,6 +49,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* JumpAction;
+
 	/***********************
 	 * CALLBACKS FOR INPUT *
 	 ***********************/
