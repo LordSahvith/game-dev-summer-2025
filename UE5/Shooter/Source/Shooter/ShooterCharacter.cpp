@@ -6,11 +6,15 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Input
 #include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+
+// Sound
+#include "Sound/SoundCue.h"
 
 AShooterCharacter::AShooterCharacter()
 {
@@ -104,11 +108,8 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 {
 	const bool bIsFireButtonPressed = Value.Get<bool>();
 
-	if (bIsFireButtonPressed)
+	if (bIsFireButtonPressed && FireSound)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Cyan, FString("Weapon Fired"));
-		}
+		UGameplayStatics::PlaySound2D(this, FireSound);
 	}
 }

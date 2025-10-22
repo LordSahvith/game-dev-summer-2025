@@ -8,10 +8,10 @@
 #include "ShooterCharacter.generated.h"
 
 class UInputAction;
-
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
+class USoundCue;
 
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
@@ -36,6 +36,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	USoundCue* FireSound;
 
 	/*********
 	* INPUT *
