@@ -78,3 +78,5 @@ DerivedDataCache/
 # Assets that are on Fab.com and should be installed from there
 **/Content/*
 !**/Content/MyContent/
+
+enc_temp_folder/
