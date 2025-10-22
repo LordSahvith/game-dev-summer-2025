@@ -59,6 +59,9 @@ void AShooterCharacter::BeginPlay()
 void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// TODO: (TEMP) Fire Rate
+	HandleFireRate();
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -107,6 +110,10 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 
 void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 {
+	// TODO: (TEMP) Fire Rate
+	if (!bCanFire) { return; }
+	bCanFire = false;
+
 	if (FireSound)
 	{
 		UGameplayStatics::PlaySound2D(this, FireSound);
@@ -127,5 +134,26 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 	{
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
+	}
+}
+
+// TODO: (TEMP) Fire Rate
+void AShooterCharacter::StartFireRateTimer()
+{
+	TempCurrentFireRateTime += (TempFireRate * 2) * GetWorld()->DeltaTimeSeconds;
+}
+
+// TODO: (TEMP) Fire Rate
+void AShooterCharacter::HandleFireRate()
+{
+	if (TempCurrentFireRateTime > TempFireRate)
+	{
+		TempCurrentFireRateTime = 0.f;
+		bCanFire = true;
+	}
+
+	if (!bCanFire)
+	{
+		StartFireRateTimer();
 	}
 }

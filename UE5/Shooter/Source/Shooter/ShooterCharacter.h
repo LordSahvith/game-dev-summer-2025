@@ -20,6 +20,17 @@ class SHOOTER_API AShooterCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	// TODO: (TEMP) Fire Rate
+public:
+	float TempFireRate{ 0.5f };
+	float TempCurrentFireRateTime{ 0.f };
+	bool bCanFire{ true };
+
+	void StartFireRateTimer();
+	void HandleFireRate();
+
+	// TODO: (TEMP) Fire Rate
+
 public:
 	AShooterCharacter();
 	virtual void Tick(float DeltaTime) override;
