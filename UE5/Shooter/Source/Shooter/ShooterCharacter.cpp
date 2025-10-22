@@ -17,6 +17,8 @@
 // Sound
 #include "Sound/SoundCue.h"
 
+#include "DrawDebugHelpers.h"
+
 AShooterCharacter::AShooterCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -126,6 +128,21 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 		if (MuzzleFlash)
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
+		}
+
+		FHitResult FireHit;
+		const FVector Start{ SocketTransform.GetLocation() };
+		const FQuat Rotation{ SocketTransform.GetRotation() };
+		const FVector RotationAxis{ Rotation.GetAxisX() };
+		const FVector End{ Start + RotationAxis * 50'000.f };
+
+		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
+
+		if (FireHit.bBlockingHit)
+		{
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 3.f);
+			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 3.f);
+			DrawDebugSphere(GetWorld(), FireHit.ImpactPoint, 10.f, 10, FColor::Red, false, 3.f);
 		}
 	}
 
