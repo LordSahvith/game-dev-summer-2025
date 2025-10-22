@@ -22,7 +22,12 @@ class SHOOTER_API AShooterCharacter : public ACharacter
 
 	// TODO: (TEMP) Fire Rate
 public:
+	UPROPERTY(EditAnywhere)
+	float TempFireRateMultiplier{ 2 };
+
+	UPROPERTY(EditAnywhere)
 	float TempFireRate{ 0.5f };
+
 	float TempCurrentFireRateTime{ 0.f };
 	bool bCanFire{ true };
 

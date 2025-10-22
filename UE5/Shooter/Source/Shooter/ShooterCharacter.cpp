@@ -140,7 +140,7 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 // TODO: (TEMP) Fire Rate
 void AShooterCharacter::StartFireRateTimer()
 {
-	TempCurrentFireRateTime += (TempFireRate * 2) * GetWorld()->DeltaTimeSeconds;
+	TempCurrentFireRateTime += (TempFireRate * TempFireRateMultiplier) * GetWorld()->DeltaTimeSeconds;
 }
 
 // TODO: (TEMP) Fire Rate
