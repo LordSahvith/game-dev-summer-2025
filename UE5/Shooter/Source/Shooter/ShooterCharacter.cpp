@@ -65,6 +65,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Jump);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AShooterCharacter::FireWeapon);
 	}
 }
 
@@ -96,5 +97,18 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 	{
 		AddControllerYawInput(LookVector.X);
 		AddControllerPitchInput(LookVector.Y);
+	}
+}
+
+void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
+{
+	const bool bIsFireButtonPressed = Value.Get<bool>();
+
+	if (bIsFireButtonPressed)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Cyan, FString("Weapon Fired"));
+		}
 	}
 }

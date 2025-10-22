@@ -52,9 +52,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* FireAction;
+
 	/***********************
 	 * CALLBACKS FOR INPUT *
 	 ***********************/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void FireWeapon(const FInputActionValue& Value);
 };
