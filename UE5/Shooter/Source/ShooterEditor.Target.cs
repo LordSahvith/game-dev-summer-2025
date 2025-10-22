@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class Ult_Shooter_CourseTarget : TargetRules
+public class ShooterEditorTarget : TargetRules
 {
-	public Ult_Shooter_CourseTarget(TargetInfo Target) : base(Target)
+	public ShooterEditorTarget( TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
+		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6;
-		ExtraModuleNames.Add("Ult_Shooter_Course");
+		ExtraModuleNames.Add("Shooter");
 	}
 }
