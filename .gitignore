@@ -75,8 +75,11 @@ Plugins/**/Intermediate/
 # Cache files for the editor to use
 DerivedDataCache/
 
+# Misc - Needs to be above the Content directory
+enc_temp_folder/
+**/Assets/
+
 # Assets that are on Fab.com and should be installed from there
 **/Content/*
 !**/Content/MyContent/
-
-enc_temp_folder/
+!**/Content/MyContent/Assets/
