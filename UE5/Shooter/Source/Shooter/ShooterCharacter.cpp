@@ -140,9 +140,13 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 
 		if (FireHit.bBlockingHit)
 		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 3.f);
-			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 3.f);
-			DrawDebugSphere(GetWorld(), FireHit.ImpactPoint, 10.f, 10, FColor::Red, false, 3.f);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
+			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+
+			if (ImpactParticles)
+			{
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.ImpactPoint);
+			}
 		}
 	}
 
