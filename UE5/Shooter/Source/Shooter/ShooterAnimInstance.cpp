@@ -29,5 +29,5 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 
 void UShooterAnimInstance::NativeInitializeAnimation()
 {
-	ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner());
+	ShooterCharacter = Cast<AShooterCharacter>(TryGetPawnOwner()); f
 }
