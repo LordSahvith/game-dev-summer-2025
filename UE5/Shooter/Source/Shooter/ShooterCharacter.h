@@ -48,6 +48,10 @@ public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+protected:
+	void AimingButtonPressed();
+	void AimingButtonReleased();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -91,15 +95,25 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* AimAction;
+
 	/***********************
 	 * CALLBACKS FOR INPUT *
 	 **********************/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void FireWeapon(const FInputActionValue& Value);
+	void AimWeapon(const FInputActionValue& Value);
 
 	/*********
 	* WEAPON *
 	*********/
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bIsAiming{ false };
+
+	float CameraDefaultFOV{ 0.f };
+	float CameraZoomedFOV{ 60.f };
 };

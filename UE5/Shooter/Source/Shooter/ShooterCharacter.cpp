@@ -34,6 +34,8 @@ AShooterCharacter::AShooterCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->GroundFriction = 2.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 85.f;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
@@ -58,7 +60,23 @@ void AShooterCharacter::BeginPlay()
 			Subsystem->AddMappingContext(CharacterMappingContext, 0);
 		}
 	}
+
+	if (FollowCamera)
+	{
+		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+	}
 }
+
+void AShooterCharacter::AimingButtonPressed()
+{
+	GetFollowCamera()->SetFieldOfView(CameraZoomedFOV);
+}
+
+void AShooterCharacter::AimingButtonReleased()
+{
+	GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
+}
+
 
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -78,6 +96,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Jump);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AShooterCharacter::FireWeapon);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &AShooterCharacter::AimWeapon);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &AShooterCharacter::AimWeapon);
 	}
 }
 
@@ -159,6 +179,15 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
 	}
+}
+
+void AShooterCharacter::AimWeapon(const FInputActionValue& Value)
+{
+	bIsAiming = Value.Get<bool>();
+
+	bIsAiming
+		? GetFollowCamera()->SetFieldOfView(CameraZoomedFOV)
+		: GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
 }
 
 bool AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation)
