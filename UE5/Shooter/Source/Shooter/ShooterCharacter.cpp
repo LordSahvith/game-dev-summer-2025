@@ -39,9 +39,9 @@ AShooterCharacter::AShooterCharacter()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->TargetArmLength = 300.f;
+	CameraBoom->TargetArmLength = 180.f;
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SocketOffset = FVector(0.f, 64.f, 64.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f);
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Follow Camera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -64,19 +64,9 @@ void AShooterCharacter::BeginPlay()
 	if (FollowCamera)
 	{
 		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = CameraDefaultFOV;
 	}
 }
-
-void AShooterCharacter::AimingButtonPressed()
-{
-	GetFollowCamera()->SetFieldOfView(CameraZoomedFOV);
-}
-
-void AShooterCharacter::AimingButtonReleased()
-{
-	GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
-}
-
 
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -84,6 +74,19 @@ void AShooterCharacter::Tick(float DeltaTime)
 
 	// TODO: (TEMP) Fire Rate
 	HandleFireRate();
+
+	CameraInterpZoom(DeltaTime);
+}
+
+void AShooterCharacter::CameraInterpZoom(float DeltaTime)
+{
+	CameraCurrentFOV = FMath::FInterpTo(
+		CameraCurrentFOV,
+		bIsAiming ? CameraZoomedFOV : CameraDefaultFOV,
+		DeltaTime,
+		ZoomInterpSpeed
+	);
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -145,10 +148,11 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 
 	if (const USkeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket"))
 	{
-		const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
+		FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
 
 		if (MuzzleFlash)
 		{
+			SocketTransform.MultiplyScale3D(FVector(0.5f, 0.5f, 0.5f));
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
 		}
 
@@ -184,10 +188,6 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 void AShooterCharacter::AimWeapon(const FInputActionValue& Value)
 {
 	bIsAiming = Value.Get<bool>();
-
-	bIsAiming
-		? GetFollowCamera()->SetFieldOfView(CameraZoomedFOV)
-		: GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
 }
 
 bool AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation)

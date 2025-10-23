@@ -43,14 +43,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void CameraInterpZoom(float DeltaTime);
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
-protected:
-	void AimingButtonPressed();
-	void AimingButtonReleased();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -115,5 +112,9 @@ private:
 	bool bIsAiming{ false };
 
 	float CameraDefaultFOV{ 0.f };
-	float CameraZoomedFOV{ 60.f };
+	float CameraZoomedFOV{ 35.f };
+	float CameraCurrentFOV{ 0.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float ZoomInterpSpeed{ 20.f };
 };
