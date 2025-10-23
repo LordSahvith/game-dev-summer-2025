@@ -14,8 +14,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
-// Sound
+// Effects
 #include "Sound/SoundCue.h"
+#include "Particles/ParticleSystemComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -136,16 +137,26 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 		const FVector RotationAxis{ Rotation.GetAxisX() };
 		const FVector End{ Start + RotationAxis * 50'000.f };
 
+		FVector BeamEndPoint{ End };
+
 		GetWorld()->LineTraceSingleByChannel(FireHit, Start, End, ECollisionChannel::ECC_Visibility);
 
 		if (FireHit.bBlockingHit)
 		{
-			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.f);
-			DrawDebugPoint(GetWorld(), FireHit.Location, 5.f, FColor::Red, false, 2.f);
+			BeamEndPoint = FireHit.ImpactPoint;
 
 			if (ImpactParticles)
 			{
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, FireHit.ImpactPoint);
+			}
+		}
+
+		if (BeamParticles)
+		{
+
+			if (UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform))
+			{
+				Beam->SetVectorParameter(FName("Target"), BeamEndPoint);
 			}
 		}
 	}
