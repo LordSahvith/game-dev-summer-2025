@@ -48,6 +48,9 @@ AShooterCharacter::AShooterCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera doesn't rotate relative to arm
 }
 
+/*************
+* OVERRRIDES *
+*************/
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -80,6 +83,9 @@ void AShooterCharacter::Tick(float DeltaTime)
 	SetLookRates();
 }
 
+/*********
+* CAMERA *
+*********/
 void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 {
 	CameraCurrentFOV = FMath::FInterpTo(
@@ -105,6 +111,28 @@ void AShooterCharacter::SetLookRates()
 	}
 }
 
+/*********
+* AIMING *
+*********/
+void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
+{
+	FVector2D WalkSpeedRange{ 0.f, GetMovementComponent()->GetMaxSpeed() };
+	FVector2D VelocityMultiplierRange{ 0.f, 1.f };
+	FVector Velocity{ GetVelocity() };
+	Velocity.Z = 0.f;
+
+	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(
+		WalkSpeedRange,
+		VelocityMultiplierRange,
+		Velocity.Size()
+	);
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+}
+
+/********
+* INPUT *
+********/
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -120,9 +148,6 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	}
 }
 
-/*********
-* INPUT *
-*********/
 void AShooterCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
@@ -206,6 +231,9 @@ void AShooterCharacter::AimWeapon(const FInputActionValue& Value)
 	bIsAiming = Value.Get<bool>();
 }
 
+/*********
+* WEAPON *
+*********/
 bool AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation)
 {
 	FVector2D ViewportSize;

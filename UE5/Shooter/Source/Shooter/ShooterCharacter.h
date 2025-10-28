@@ -38,18 +38,36 @@ public:
 
 public:
 	AShooterCharacter();
+
+	/*************
+	* OVERRRIDES *
+	*************/
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
-	virtual void BeginPlay() override;
-	void CameraInterpZoom(float DeltaTime);
-	void SetLookRates();
-
-public:
+	/**********
+	* GETTERS *
+	**********/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool GetIsAiming() const { return bIsAiming; }
+
+protected:
+	/*************
+	* OVERRRIDES *
+	*************/
+	virtual void BeginPlay() override;
+
+	/*********
+	* CAMERA *
+	*********/
+	void CameraInterpZoom(float DeltaTime);
+	void SetLookRates();
+
+	/*********
+	* AIMING *
+	*********/
+	void CalculateCrosshairSpread(float DeltaTime);
 
 private:
 	/*********
@@ -91,6 +109,24 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	float AimingLookUpRate{ 20.f };
+
+	/*************
+	* CROSSHAIRS *
+	*************/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairSpreadMultiplier;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairVelocityFactor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairInAirFactor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairAimFactor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairShootingFactor;
 
 	/**********
 	* EFFECTS *
