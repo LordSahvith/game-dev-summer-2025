@@ -44,6 +44,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	void CameraInterpZoom(float DeltaTime);
+	void SetLookRates();
 
 public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -51,11 +52,45 @@ public:
 	FORCEINLINE bool GetIsAiming() const { return bIsAiming; }
 
 private:
+	/*********
+	* CAMERA *
+	*********/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float ZoomInterpSpeed{ 20.f };
+
+	float CameraDefaultFOV{ 0.f };
+	float CameraZoomedFOV{ 35.f };
+	float CameraCurrentFOV{ 0.f };
+
+	/*********
+	* AIMING *
+	*********/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bIsAiming{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate{ 45.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float BaseLookUpRate{ 45.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float HipTurnRate{ 90.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float HipLookUpRate{ 90.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float AimingTurnRate{ 20.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float AimingLookUpRate{ 20.f };
 
 	/**********
 	* EFFECTS *
@@ -108,14 +143,4 @@ private:
 	* WEAPON *
 	*********/
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	bool bIsAiming{ false };
-
-	float CameraDefaultFOV{ 0.f };
-	float CameraZoomedFOV{ 35.f };
-	float CameraCurrentFOV{ 0.f };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float ZoomInterpSpeed{ 20.f };
 };

@@ -76,6 +76,8 @@ void AShooterCharacter::Tick(float DeltaTime)
 	HandleFireRate();
 
 	CameraInterpZoom(DeltaTime);
+
+	SetLookRates();
 }
 
 void AShooterCharacter::CameraInterpZoom(float DeltaTime)
@@ -87,6 +89,20 @@ void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 		ZoomInterpSpeed
 	);
 	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
+}
+
+void AShooterCharacter::SetLookRates()
+{
+	if (bIsAiming)
+	{
+		BaseTurnRate = AimingTurnRate;
+		BaseLookUpRate = AimingLookUpRate;
+	}
+	else
+	{
+		BaseTurnRate = HipTurnRate;
+		BaseLookUpRate = HipLookUpRate;
+	}
 }
 
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -130,8 +146,8 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 
 	if (GetController())
 	{
-		AddControllerYawInput(LookVector.X);
-		AddControllerPitchInput(LookVector.Y);
+		AddControllerYawInput(LookVector.X * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		AddControllerPitchInput(LookVector.Y * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 	}
 }
 
