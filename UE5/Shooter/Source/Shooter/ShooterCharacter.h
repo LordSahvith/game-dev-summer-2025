@@ -20,22 +20,6 @@ class SHOOTER_API AShooterCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	// TODO: (TEMP) Fire Rate
-public:
-	UPROPERTY(EditAnywhere)
-	float TempFireRateMultiplier{ 2 };
-
-	UPROPERTY(EditAnywhere)
-	float TempFireRate{ 0.5f };
-
-	float TempCurrentFireRateTime{ 0.f };
-	bool bCanFire{ true };
-
-	void StartFireRateTimer();
-	void HandleFireRate();
-
-	// TODO: (TEMP) Fire Rate
-
 public:
 	AShooterCharacter();
 
@@ -80,6 +64,14 @@ protected:
 	* AIMING *
 	*********/
 	void CalculateCrosshairSpread(float DeltaTime);
+
+	/*********
+	* FIRING *
+	*********/
+	void StartCrosshairBulletFire();
+
+	UFUNCTION()
+	void FinishCrosshairBulletFire();
 
 private:
 	/*********
@@ -197,6 +189,13 @@ private:
 	* WEAPON *
 	*********/
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
+	/*********
+	* FIRING *
+	*********/
+	float ShootTimeDuration{ 0.05f };
+	bool bIsFiringBullet{ false };
+	FTimerHandle CrosshairShootTimer;
 
 	bool bIsIdle{ true };
 };

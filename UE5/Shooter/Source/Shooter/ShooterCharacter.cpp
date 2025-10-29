@@ -75,9 +75,6 @@ void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// TODO: (TEMP) Fire Rate
-	HandleFireRate();
-
 	CameraInterpZoom(DeltaTime);
 
 	SetLookRates();
@@ -139,7 +136,33 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		? FMath::FInterpTo(CrosshairAimFactor, 0.6f, DeltaTime, 30.f)
 		: FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
 
-	CrosshairSpreadMultiplier = CrosshairSpreadMin + CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor;
+	CrosshairShootingFactor = bIsFiringBullet
+		? FMath::FInterpTo(CrosshairShootingFactor, 0.3f, DeltaTime, 60.f)
+		: FMath::FInterpTo(CrosshairShootingFactor, 0.f, DeltaTime, 60.f);
+
+	CrosshairSpreadMultiplier =
+		CrosshairSpreadMin +
+		CrosshairVelocityFactor +
+		CrosshairInAirFactor -
+		CrosshairAimFactor +
+		CrosshairShootingFactor;
+}
+
+void AShooterCharacter::StartCrosshairBulletFire()
+{
+	bIsFiringBullet = true;
+
+	GetWorldTimerManager().SetTimer(
+		CrosshairShootTimer,
+		this,
+		&AShooterCharacter::FinishCrosshairBulletFire,
+		ShootTimeDuration
+	);
+}
+
+void AShooterCharacter::FinishCrosshairBulletFire()
+{
+	bIsFiringBullet = false;
 }
 
 float AShooterCharacter::GetCrosshairSpreadMultiplier() const
@@ -207,9 +230,7 @@ void AShooterCharacter::Look(const FInputActionValue& Value)
 
 void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 {
-	// TODO: (TEMP) Fire Rate
-	if (!bCanFire) { return; }
-	bCanFire = false;
+	if (bIsFiringBullet) { return; }
 
 	if (FireSound)
 	{
@@ -253,6 +274,8 @@ void AShooterCharacter::FireWeapon(const FInputActionValue& Value)
 		AnimInstance->Montage_Play(HipFireMontage);
 		AnimInstance->Montage_JumpToSection(FName("StartFire"));
 	}
+
+	StartCrosshairBulletFire();
 }
 
 void AShooterCharacter::AimWeapon(const FInputActionValue& Value)
@@ -316,25 +339,4 @@ bool AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
 	}
 
 	return false;
-}
-
-// TODO: (TEMP) Fire Rate
-void AShooterCharacter::StartFireRateTimer()
-{
-	TempCurrentFireRateTime += (TempFireRate * TempFireRateMultiplier) * GetWorld()->DeltaTimeSeconds;
-}
-
-// TODO: (TEMP) Fire Rate
-void AShooterCharacter::HandleFireRate()
-{
-	if (TempCurrentFireRateTime > TempFireRate)
-	{
-		TempCurrentFireRateTime = 0.f;
-		bCanFire = true;
-	}
-
-	if (!bCanFire)
-	{
-		StartFireRateTimer();
-	}
 }
