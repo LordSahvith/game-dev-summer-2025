@@ -126,7 +126,7 @@ private:
 	* CROSSHAIRS *
 	*************/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
-	float CrosshairSpreadMultiplier;
+	float CrosshairSpreadMultiplier{ 0.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
 	float CrosshairSpreadMin{ 0.5f };
@@ -135,16 +135,16 @@ private:
 	float CrosshairSpreadMax{ 16.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
-	float CrosshairVelocityFactor;
+	float CrosshairVelocityFactor{ 0.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
-	float CrosshairInAirFactor;
+	float CrosshairInAirFactor{ 0.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
-	float CrosshairAimFactor;
+	float CrosshairAimFactor{ 0.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
-	float CrosshairShootingFactor;
+	float CrosshairShootingFactor{ 0.f };
 
 	/**********
 	* EFFECTS *

@@ -135,7 +135,11 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		? FMath::FInterpTo(CrosshairInAirFactor, 2.25f, DeltaTime, 2.25f)
 		: FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
 
-	CrosshairSpreadMultiplier = CrosshairSpreadMin + CrosshairVelocityFactor + CrosshairInAirFactor;
+	CrosshairAimFactor = bIsAiming
+		? FMath::FInterpTo(CrosshairAimFactor, 0.6f, DeltaTime, 30.f)
+		: FMath::FInterpTo(CrosshairAimFactor, 0.f, DeltaTime, 30.f);
+
+	CrosshairSpreadMultiplier = CrosshairSpreadMin + CrosshairVelocityFactor + CrosshairInAirFactor - CrosshairAimFactor;
 }
 
 float AShooterCharacter::GetCrosshairSpreadMultiplier() const
