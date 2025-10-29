@@ -52,6 +52,18 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool GetIsAiming() const { return bIsAiming; }
 
+	UFUNCTION(BlueprintCallable)
+	float GetCrosshairSpreadMultiplier() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsIdle() const;
+
+	/**********
+	* SETTERS *
+	**********/
+	UFUNCTION(BlueprintCallable)
+	bool SetIsIdle(const bool& NewIdle);
+
 protected:
 	/*************
 	* OVERRRIDES *
@@ -117,6 +129,12 @@ private:
 	float CrosshairSpreadMultiplier;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairSpreadMin{ 0.5f };
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
+	float CrosshairSpreadMax{ 16.f };
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
 	float CrosshairVelocityFactor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs", meta = (AllowPrivateAccess = "true"))
@@ -179,4 +197,6 @@ private:
 	* WEAPON *
 	*********/
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+
+	bool bIsIdle{ true };
 };

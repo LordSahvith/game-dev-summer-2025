@@ -81,6 +81,10 @@ void AShooterCharacter::Tick(float DeltaTime)
 	CameraInterpZoom(DeltaTime);
 
 	SetLookRates();
+
+	CalculateCrosshairSpread(DeltaTime);
+
+	bIsIdle = SetIsIdle(GetCharacterMovement()->GetForwardVector().Length() > 0.f);
 }
 
 /*********
@@ -127,7 +131,26 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
 		Velocity.Size()
 	);
 
-	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+	CrosshairInAirFactor = GetCharacterMovement()->IsFalling()
+		? FMath::FInterpTo(CrosshairInAirFactor, 2.25f, DeltaTime, 2.25f)
+		: FMath::FInterpTo(CrosshairInAirFactor, 0.f, DeltaTime, 30.f);
+
+	CrosshairSpreadMultiplier = CrosshairSpreadMin + CrosshairVelocityFactor + CrosshairInAirFactor;
+}
+
+float AShooterCharacter::GetCrosshairSpreadMultiplier() const
+{
+	return CrosshairSpreadMultiplier;
+}
+
+bool AShooterCharacter::GetIsIdle() const
+{
+	return bIsIdle;
+}
+
+bool AShooterCharacter::SetIsIdle(const bool& NewIdle)
+{
+	return bIsIdle = NewIdle;
 }
 
 /********
@@ -162,6 +185,8 @@ void AShooterCharacter::Move(const FInputActionValue& Value)
 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
+
+		bIsIdle = SetIsIdle(false);
 	}
 }
 
